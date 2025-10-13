@@ -1,3 +1,8 @@
+#-------------------------------------------------------------
+# FUNCTIONS FOR THE CALCULATION OF GRAVITATIONAL ACCELERATION
+#-------------------------------------------------------------
+
+
 #Imports
 
 from imports import np
@@ -13,7 +18,7 @@ G = #gravitational constant
 def d(first, second):#Takes numpy arrays of 3D coordinates
     x_1, y_1, z_1 = first
     x_2, y_2, z_2 = second
-    return np.sqrt(mod(x_2 - x_1) ** 2 + mod(y_2 - y_1) ** 2 + mod(z_2 - z_1) ** 2)
+    return np.sqrt(np.mod(x_2 - x_1) ** 2 + np.mod(y_2 - y_1) ** 2 + np.mod(z_2 - z_1) ** 2)
 
 
 #Function for acceleration due to gravity

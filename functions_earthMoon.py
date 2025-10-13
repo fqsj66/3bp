@@ -1,3 +1,8 @@
+#----------------------------------------------------------------
+# FUNCTIONS FOR THE POSITIONS OF BODIES IN THE EARTH-MOON SYSTEM
+#----------------------------------------------------------------
+
+
 #Imports
 
 from imports import np
@@ -16,7 +21,7 @@ r_M_circular = (d_EM * m_E) / (m_E + m_M) #Radius of Moon's orbit
 T_EM = np.sqrt(4 * np.pi ** 2 * d_EM ** 3 / (G * (m_M + m_E))) #Time period of orbit, worked out using K3L, may have to expand sqrt UNSURE IF THIS IS CORRECT
 
 
-#Functions for the coordinates of Earth and Moon relative to centre of mass
+#Functions for the coordinates of Earth and Moon relative to centre of mass (and fixed stars)
 
 def x_E_circular(t):
     #Earth starts at y=0, x>0 for t=0
@@ -31,6 +36,3 @@ def x_M_circular(t):
     x = -1 * r_M_circular * np.cos(angle)
     y = -1 * r_M_circular * np.sin(angle)
     return np.array([x, y])
-
-
-print(T_EM)
