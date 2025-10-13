@@ -205,3 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# MANUAL IGNORES
+
+#Ignores all data files for brevity
+*.csv
