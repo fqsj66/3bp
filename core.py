@@ -33,20 +33,46 @@ from imports import np
 #plt.plot(x_E[1:], y_E[1:], color='red')
 #plt.show()
 
-a = np.arange(6.0).reshape((3, 2))
-b = np.arange(6.0).reshape((3, 2))
 
-print(np.arange(6.0).reshape((3, 2)))
-print(np.arange(6.0).reshape((3, 2)))
 
-print("1")
 
-print(np.subtract(a, b))
 
-print("1")
 
-print(np.transpose(a))
 
-print(a[0])
 
-print(np.transpose(a)[0])
+
+
+
+
+#a = np.arange(6.0).reshape((3, 2))
+#b = np.arange(6.0).reshape((3, 2))
+
+#print(np.arange(6.0).reshape((3, 2)))
+#print(np.arange(6.0).reshape((3, 2)))
+
+#print("1")
+
+#print(np.subtract(a, b))
+
+#print("1")
+
+#print(np.transpose(a))
+
+#print(a[0])
+
+#print(np.transpose(a)[0])
+
+
+hello = np.empty((2,3))
+print(hello)
+test1 = np.array([0, 1, 2])
+test2 = np.array([3, 4, 5])
+print(test1)
+print(test2)
+hello[0] = test1
+hello[1] = test2
+print(hello)
+
+hiya = np.array([[0, 1, 2], [3, 4, 5]])
+
+print(hello + hiya * 2)

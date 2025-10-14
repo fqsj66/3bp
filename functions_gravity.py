@@ -21,7 +21,7 @@ def d(state1, state2): #Takes state arrays as input
     return np.sqrt((x_2 - x_1) ** 2 + (y_2 - y_1) ** 2 + (z_2 - z_1) ** 2) #Number output
 
 
-#Function for gravitational acceleration due to one body!!!!!!!!!!!
+#Function for gravitational acceleration due to one body
 
 def aGravityComponent(mass, state, stateParticular): #Gives acceleration contribution due to a body with mass and state, acting on stateParticular
     return -1 * G * mass * (stateParticular[0] - state[0]) * d(state, stateParticular) ** (-3) #Outputs an array with the differing components of acceleration
@@ -34,3 +34,9 @@ def aGravity(masses, states, stateParticular):#Takes list of masses and states (
     for i in range(0, len(masses) + 1):
         aGravityTotal += aGravityComponent(masses[i], states[i], stateParticular) #Watch out that aGravityTotal doesn't become much larger than each component
     return aGravityTotal
+
+
+#Function for gravitational velocity impact (none)
+
+def vGravity(masses, states, statePaticular) #"Dummy" function for step & evolution functions
+    return stateParticular[1] #Simply returns the velocity vector of the state
