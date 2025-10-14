@@ -10,7 +10,7 @@ from imports import np
 
 #Constants NEED TO STATE UNITS ALL SI FOR NOW
 
-G = 6.67430E-11 #Gravitational Constant [m3kg-1s-2], wikipedia FOR NOW
+G = 6.67430E-11 #Gravitational Constant [m3kg-1s-2], https://www.britannica.com/science/gravitational-constant FOR NOW
 d_EM = 3844E5 #Earth to moon distance [m], https://spaceplace.nasa.gov/moon-distance/en/ FOR NOW
 m_E = 5.97E24 #Mass of Earth [kg], https://www.britannica.com/science/How-Big-Is-Earth FOR NOW
 m_M = 7.3E22 #Mass of Moon [kg], https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/moon/ FOR NOW
