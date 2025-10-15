@@ -21,16 +21,16 @@ def step_Taylor(state, t, dt, f_v, f_a): #f_v is redundant, t gives the time at 
 
 def step_RK4(state, t, dt, f_v, f_a): #f_v is  redundant, t ... (as above)
     x1 = state[0] + (dt / 2) * state[1]
-    v1 = state[1] + (dt / 2) * f_a(state, (t + dt / 2)) #Need to check that these times are correct. Do they even need to change? Should i just put t?
+    v1 = state[1] + (dt / 2) * f_a(state, (t + dt / 2)) #Note that f_a is in general time dependent and as such is a function of t
     x2 = state[0] + (dt / 2) * x.1
-    v2 = state[1] + (dt / 2) * f_a(np.array([x1, v1]), t) #Just putting t for now
+    v2 = state[1] + (dt / 2) * f_a(np.array([x1, v1]), (t + dt / 2))
     x3 = state[0] + dt * v2
-    v3 = state[1] + dt * f_a(np.array([x2, v2]), t)
+    v3 = state[1] + dt * f_a(np.array([x2, v2]), (t + dt))
 
     #May choose to store a123 as variables so they don't have to be re-evaluated here:
     stateNew = np.empty((2, 3))
     stateNew[0] = state[0] + dt / 6 * (state[1] + 2 * v1 + 2 * v2 + v3)
-    stateNew[1] = state[1] + dt / 6 * (f_a(state, t) + 2 * f_a(np.array([x1, v1]), t) + 2 * f_a(np.array([x2, v2]), t) + f_a(np.array([x3, v3]), t)) #Need to check t's here too
+    stateNew[1] = state[1] + dt / 6 * (f_a(state, t) + 2 * f_a(np.array([x1, v1]), (t + dt / 2)) + 2 * f_a(np.array([x2, v2]), (t + dt / 2)) + f_a(np.array([x3, v3]), (t + dt))) #Need to check t's here too
     return stateNew
 
 
