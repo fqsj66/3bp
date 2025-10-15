@@ -36,3 +36,6 @@ def x_M_circular(t):
     x = -1 * r_M_circular * np.cos(angle)
     y = -1 * r_M_circular * np.sin(angle)
     return np.array([x, y])
+
+
+#Function for calling functions_gravity subroutine a_Gravity at a certain time, calculating the states of the moon and sun to pass into this.
