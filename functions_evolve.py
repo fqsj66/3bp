@@ -14,9 +14,10 @@ def step_Euler(state, dt, f_v, f_a): #f_v and f_a may need to be altered using i
     stateChange = np.array([f_v(state), f_a(state)]) #Calculates the deviations 
     stateNew = state + stateChange * dt
     return stateNew
-    #stateNew = np.empty((2,3))
-    #stateNew[0][0] = state[0][0] + f_v(state) * dt #x
-    #stateNew[0][1] = state[0][1] + f_v(state) * dt #y NEED TO SOMEHOW TELL f_v WHICH DIMENSION?
+
+def step_Taylor(state, dt, f_v, f_a):
+    f_a_values = f_a(state)
+    return state + dt * np.array([state[1], f_a_values]) + (dt ** 2 / 2) * nparray([f_a_values, [0, 0, 0]])
 
 
 #Function for multiple steps forward
