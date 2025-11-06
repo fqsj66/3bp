@@ -40,24 +40,24 @@ def step_RK4(state, t, dt, f_v, f_a): #f_v is  redundant, t ... (as above)
 def evolve(state, t, dt, T, f_v, f_a, useMethod, useFile): #Evolve motion starting at state and time t, with timestep dt and end time T.
     N = np.round((T - t) / (dt * 50)) + 1 #Number of groups of 50 timesteps needed, added one in case rounds down to zero
 
-    f = open('useFile', 'w+', newline='')
+    f = open(useFile, 'w+', newline='')
     writer = csv.writer(f)
 
-    if useMethod == "Euler":
+    if useMethod == "E": #Euler steps
 
         for i in range(0, N):
             for j in range(0, 50): #Does 50 steps before saving current state again
                 state = step_Euler(state, (t + 50 * i + j), dt, f_v, f_a) #Time calculated from number of individual steps
             writer.writerow(state[0]) #Saves positions only.................................................................DOES THIS KEEP THE FULL PRECISION OF THE NUMBERS?
 
-    elif useMethod == "Taylor":
+    elif useMethod == "T": #Taylor steps
 
         for i in range(0, N):
             for j in range(0, 50):
                 state = step_Taylor(state, (t + 50 * i + j), dt, f_v, f_a)
             writer.writerow(state[0])
 
-    else:
+    else: #RK4 steps
 
         for i in range(0, N):
             for j in range(0, 50):

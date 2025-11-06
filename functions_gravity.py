@@ -38,5 +38,5 @@ def a_Gravity(masses, states, stateParticular):#Takes list of masses and states 
 
 #Function for gravitational velocity impact (none)
 
-def v_Gravity(masses, states, stateParticular) #"Dummy" function for step & evolution functions
+def v_Gravity(masses, states, stateParticular): #"Dummy" function for step & evolution functions
     return stateParticular[1] #Simply returns the velocity vector of the state
