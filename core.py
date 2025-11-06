@@ -21,8 +21,8 @@ from imports import np
 #y_M = np.array([0])
 
 #for i in range(0, 40):
-#    x_E_i, y_E_i = x_E_circular(i * 10000)
-#    x_M_i, y_M_i = x_M_circular(i * 10000)
+#    x_E_i, y_E_i = x_E_Circular(i * 10000)
+#    x_M_i, y_M_i = x_M_Circular(i * 10000)
 
 #    x_E = np.append(x_E, [x_E_i])
 #    y_E = np.append(y_E, [y_E_i])
@@ -63,16 +63,25 @@ from imports import np
 #print(np.transpose(a)[0])
 
 
-hello = np.empty((2,3))
-print(hello)
-test1 = np.array([0, 1, 2])
-test2 = np.array([3, 4, 5])
-print(test1)
-print(test2)
-hello[0] = test1
-hello[1] = test2
-print(hello)
+#hello = np.empty((2,3))
+#print(hello)
+#test1 = np.array([0, 1, 2])
+#test2 = np.array([3, 4, 5])
+#print(test1)
+#print(test2)
+#hello[0] = test1
+#hello[1] = test2
+#print(hello)
 
-hiya = np.array([[0, 1, 2], [3, 4, 5]])
+#hiya = np.array([[0, 1, 2], [3, 4, 5]])
 
-print(hello + hiya * 2)
+#print(hello + hiya * 2)
+
+
+
+
+
+
+
+test = np.array([0, 1, 2])
+print(test[0])
