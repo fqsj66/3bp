@@ -43,5 +43,5 @@ def x_M_Circular(t):
 
 def E_M_a_Gravity(stateParticular, t): #Acceleration due to gravity of rocket at stateParticular at time t due to Earth and Moon system
     masses = np.array([m_E, m_M])
-    states = np.array([[x_E_Circular(t)], [0, 0, 0]], [[x_M_Circular(t)], [0, 0, 0]]) #Set velocities to zero because these are redundant in the calculation, force of gravity independent of velocities
+    states = np.array([[tuple(x_E_Circular(t)), [0, 0, 0]], [tuple(x_M_Circular(t)), [0, 0, 0]]]) #Set velocities to zero because these are redundant in the calculation, force of gravity independent of velocities
     return a_Gravity(masses, states, stateParticular)

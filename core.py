@@ -82,6 +82,7 @@ from imports import np
 
 
 
-
 test = np.array([0, 1, 2])
-print(test[0])
+print(tuple(test))
+test2 = np.array([tuple(test), tuple(test)])
+print(test2)

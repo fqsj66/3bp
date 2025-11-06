@@ -38,7 +38,7 @@ def step_RK4(state, t, dt, f_v, f_a): #f_v is  redundant, t ... (as above)
 #Function for multiple steps forward
 
 def evolve(state, t, dt, T, f_v, f_a, useMethod, useFile): #Evolve motion starting at state and time t, with timestep dt and end time T.
-    N = np.round((T - t) / (dt * 50)) + 1 #Number of groups of 50 timesteps needed, added one in case rounds down to zero
+    N = int(np.round((T - t) / (dt * 50))) + 1 #Number of groups of 50 timesteps needed, added one in case rounds down to zero
 
     f = open(useFile, 'w+', newline='')
     writer = csv.writer(f)
