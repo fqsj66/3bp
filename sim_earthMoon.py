@@ -5,6 +5,7 @@
 
 #Imports
 
+from imports import imageio
 from imports import np
 from imports import plt
 from imports import pd
@@ -58,9 +59,6 @@ output = pd.read_csv(useFile)
 xs = np.array(output.x)
 ys = np.array(output.y)
 
-plt.plot(xs, ys, color='red')
-
-
 from functions_earthMoon import x_E_Circular, x_M_Circular
 
 x_E = np.array([0])
@@ -70,8 +68,9 @@ x_M = np.array([0])
 y_M = np.array([0])
 
 for i in range(0, len(xs)):
-    x_E_i, y_E_i, z_E_i = x_E_Circular(i * dt * 50)
-    x_M_i, y_M_i, z_M_i = x_M_Circular(i * dt * 50)
+
+    x_E_i, y_E_i, z_E_i = x_E_Circular(i * dt * 20)
+    x_M_i, y_M_i, z_M_i = x_M_Circular(i * dt * 20)
 
     x_E = np.append(x_E, [x_E_i])
     y_E = np.append(y_E, [y_E_i])
@@ -80,5 +79,46 @@ for i in range(0, len(xs)):
 
 plt.plot(x_M[1:], y_M[1:], color='blue')
 plt.plot(x_E[1:], y_E[1:], color='green')
+plt.plot(xs, ys, color='red')
 
 plt.show()
+
+
+#Creating a gif
+
+for frame in range(0, len(xs)):
+    fig = plt.figure(figsize=(6, 6))
+    for i in range(0, len(xs)):
+
+        x_E_i, y_E_i, z_E_i = x_E_Circular(i * dt * 20)
+        x_M_i, y_M_i, z_M_i = x_M_Circular(i * dt * 20)
+
+        x_E = np.append(x_E, [x_E_i])
+        y_E = np.append(y_E, [y_E_i])
+        x_M = np.append(x_M, [x_M_i])
+        y_M = np.append(y_M, [y_M_i])
+
+    plt.plot(x_M[1:], y_M[1:], color='blue')
+    plt.plot(x_E[1:], y_E[1:], color='green')
+    plt.plot(xs[:(frame)], ys[:(frame)], color='red')
+
+    plt.xlim([50000000, -50000000])
+    plt.xlim([50000000, -50000000])
+    plt.title("t={}".format(frame * dt * 20))
+
+    plt.savefig(f'./images/{frame}.png', 
+                transparent = False,  
+                facecolor = 'white'
+               )
+
+    plt.close()
+
+frames = []
+for frameNum in range(0, len(xs)):
+    image = imageio.v2.imread(f'./images/{frameNum}.png')
+    frames.append(image)
+imageio.mimsave('./test.gif', frames, fps = 5)
+
+#plt.show()
+
+print("DONE")

@@ -209,5 +209,7 @@ __marimo__/
 
 # MANUAL IGNORES
 
-#Ignores all data files for brevity
+#Ignores all data files and pngs/gifs for brevity
 *.csv
+*.png
+*.gif
