@@ -42,6 +42,7 @@ def evolve(state, t, dt, T, f_v, f_a, useMethod, useFile): #Evolve motion starti
 
     f = open(useFile, 'w+', newline='')
     writer = csv.writer(f)
+    writer.writerow(["x", "y", "z"])
 
     if useMethod == "E": #Euler steps
 

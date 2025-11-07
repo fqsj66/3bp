@@ -10,6 +10,7 @@
 
 
 from imports import np
+from imports import pd
 #from imports import plt
 
 #from functions_earthMoon import x_E_circular, x_M_circular
@@ -82,7 +83,13 @@ from imports import np
 
 
 
-test = np.array([0, 1, 2])
-print(tuple(test))
-test2 = np.array([tuple(test), tuple(test)])
-print(test2)
+#test = np.array([0, 1, 2])
+#print(tuple(test))
+#test2 = np.array([tuple(test), tuple(test)])
+#print(test2)
+
+
+
+
+output = pd.read_csv("test.csv")
+print(output.x[0])
