@@ -18,7 +18,7 @@ def step_Euler(state, t, dt, f_v, f_a): #f_v and f_a may need to be altered usin
 
 def step_Taylor(state, t, dt, f_v, f_a): #f_v is redundant, t gives the time at the start of the step, it is assumed f_a does not vary in time throughout the step
     f_a_values = f_a(state, t)
-    return state + dt * np.array([state[1], f_a_values]) + (dt ** 2 / 2) * nparray([f_a_values, [0, 0, 0]])
+    return state + dt * np.array([state[1], f_a_values]) + (dt ** 2 / 2) * np.array([f_a_values, [0, 0, 0]])
 
 def step_RK4(state, t, dt, f_v, f_a): #f_v is  redundant, t ... (as above)
     x1 = state[0] + (dt / 2) * state[1]
@@ -38,6 +38,7 @@ def step_RK4(state, t, dt, f_v, f_a): #f_v is  redundant, t ... (as above)
 #Function for multiple steps forward
 
 def evolve(state, t, dt, T, f_v, f_a, useMethod, useFile): #Evolve motion starting at state and time t, with timestep dt and end time T.
+    exit
     N = int(np.round((T - t) / (dt * 20))) + 1 #Number of groups of 20 timesteps needed, added one in case rounds down to zero
 
     f = open(useFile, 'w+', newline='')

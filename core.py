@@ -91,9 +91,9 @@ from imports import pd
 
 
 
-output = pd.read_csv("test.csv")
-print(output.x[0])
+#output = pd.read_csv("test.csv")
+#print(output.x[0])
 
-testtest = 20
+#testtest = 20
 
-print(str("t={}".format(testtest)))
+#print(str("t={}".format(testtest)))

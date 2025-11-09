@@ -102,8 +102,8 @@ for frame in range(0, len(xs)):
     plt.plot(x_E[1:], y_E[1:], color='green')
     plt.plot(xs[:(frame)], ys[:(frame)], color='red')
 
-    plt.xlim([50000000, -50000000])
-    plt.xlim([50000000, -50000000])
+    plt.xlim(500000000, -500000000)
+    plt.ylim(500000000, -500000000)
     plt.title("t={}".format(frame * dt * 20))
 
     plt.savefig(f'./images/{frame}.png', 
@@ -119,6 +119,5 @@ for frameNum in range(0, len(xs)):
     frames.append(image)
 imageio.mimsave('./test.gif', frames, fps = 5)
 
-#plt.show()
 
 print("DONE")
