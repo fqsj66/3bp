@@ -38,10 +38,11 @@ def step_RK4(state, t, dt, f_v, f_a): #f_v is  redundant, t ... (as above)
 #Function for multiple steps forward
 
 def evolve(state, t, dt, T, f_v, f_a, useMethod, useFile): #Evolve motion starting at state and time t, with timestep dt and end time T.
-    exit
+    #exit
+    directory = "{}/rocket.csv".format(useFile)
     N = int(np.round((T - t) / (dt * 20))) + 1 #Number of groups of 20 timesteps needed, added one in case rounds down to zero
 
-    f = open(useFile, 'w+', newline='')
+    f = open(directory, 'w+', newline='')
     writer = csv.writer(f)
     writer.writerow(["x", "y", "z"])
 

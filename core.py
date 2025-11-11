@@ -10,7 +10,7 @@
 
 
 from imports import np
-from imports import pd
+#from imports import pd
 #from imports import plt
 
 #from functions_earthMoon import x_E_circular, x_M_circular
@@ -97,3 +97,25 @@ from imports import pd
 #testtest = 20
 
 #print(str("t={}".format(testtest)))
+
+
+
+
+from functions_evolve import step_RK4
+
+x = np.arange(-10, 11)
+
+def f_a(state, t):
+    return [1, 0, 0]
+def f_v(state, t):
+    return state[1]
+
+stateParticular = np.array([[-300000000, 0, 0], [0, 0, 0]])
+
+t=0
+dt=1
+
+#print(step_RK4(stateParticular, t, dt, f_v, f_a))
+
+#import os
+#os.makedirs("images7/")
