@@ -10,17 +10,23 @@ from imports import np
 from imports import plt
 from imports import pd
 from imports import os
+from imports import time
 from functions_evolve import evolve
 from functions_earthMoon import E_M_a_Gravity
 
 
 #Inputs
 
-print("""EARTH-MOON SYSTEM ROCKET SIMULATION
+print("""
+-----------------------------------
+EARTH-MOON SYSTEM ROCKET SIMULATION
+-----------------------------------
 
-INPUTS (all SI units):
+------
+SETUP:
+------
 
-Initial Rocket Coordinates:""")
+Initial Rocket Coordinates [SI]:""")
 
 state = np.zeros((2, 3))
 state[0][0] = float(input("x   : "))
@@ -31,7 +37,7 @@ state[1][1] = float(input("v_y : "))
 state[1][2] = float(input("v_z : "))
 
 print("""
-Simulation Parameters:""")
+Simulation Parameters [SI]:""")
 
 t = float(input("Start time :"))
 dt = float(input("Time step  :"))
@@ -39,7 +45,7 @@ T = float(input("End time   :"))
 useMethod = input("Step method (E/T/RK4) :")
 
 print("""
-Other:""")
+Simulation Name:""")
 
 useFileName = input("Output file name :")
 #useFile = "{}.csv".format(useFileName)
@@ -53,11 +59,22 @@ os.makedirs("{}/frames".format(useFileName))
 #Running Simulation
 
 print("""
-RUNNING SIMULATION...""")
+-------------------
+RUNNING SIMULATION:
+-------------------
+""")
+
+print("START: {}".format(time.localtime()))
 
 evolve(state, t, dt, T, 0, E_M_a_Gravity, useMethod, useFileName)
 
-print("COMPLETE")
+print("COMPLETE: {}".format(time.localtime()))
+
+print("""
+----------------
+GENERATING PLOT:
+----------------
+""")
 
 
 #Plotting
@@ -90,6 +107,13 @@ plt.plot(xs, ys, color='red')
 
 plt.show()
 plt.close()
+
+
+print("""
+--------------------
+GENERATING ANIMATION
+--------------------
+""")
 
 
 #Creating a gif
@@ -146,4 +170,4 @@ imageio.mimsave('./{}/animation.gif'.format(useFileName), frames, fps = 20)
 #    x_M = np.append(x_M, [x_M_i])
 #    y_M = np.append(y_M, [y_M_i])
 
-print("DONE")
+print("""EXIT SIMULATION""")
