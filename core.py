@@ -119,3 +119,18 @@ dt=1
 
 #import os
 #os.makedirs("images7/")
+
+
+#Creating gif
+
+from imports import pd
+from imports import imageio
+
+output = pd.read_csv("l2_3/rocket.csv")
+xs = np.array(output.x)
+
+frames = []
+for frameNum in range(0, int(len(xs) / 2)):
+    image = imageio.v2.imread(f'./l2_3/frames/{frameNum}.png')
+    frames.append(image)
+imageio.mimsave('./animation.gif', frames, fps = 20)

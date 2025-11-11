@@ -13,6 +13,7 @@ from imports import os
 from imports import time
 from functions_evolve import evolve
 from functions_earthMoon import E_M_a_Gravity
+from functions_gravity import d
 
 
 #Inputs
@@ -70,14 +71,15 @@ evolve(state, t, dt, T, 0, E_M_a_Gravity, useMethod, useFileName)
 
 print("COMPLETE: {}".format(time.localtime()))
 
+
+#Plotting
+
+
 print("""
 ----------------
 GENERATING PLOT:
 ----------------
 """)
-
-
-#Plotting
 
 output = pd.read_csv("{}/rocket.csv".format(useFileName))
 xs = np.array(output.x)
@@ -109,65 +111,72 @@ plt.show()
 plt.close()
 
 
-print("""
---------------------
-GENERATING ANIMATION
---------------------
-""")
+#Gif creation
+
+gifQ = input("Create gif? (y/n) :")
+
+if gifQ == "y":
+    print("""
+    --------------------
+    GENERATING ANIMATION
+    --------------------
+    """)
+
+    x_E = np.array([0])
+    y_E = np.array([0])
+
+    x_M = np.array([0])
+    y_M = np.array([0])
+
+    for frame in range(0, len(xs)):
+        fig = plt.figure(figsize=(6, 6))
+
+        x_E_i, y_E_i, z_E_i = x_E_Circular(frame * dt * 20)
+        x_M_i, y_M_i, z_M_i = x_M_Circular(frame * dt * 20)
+
+        x_E = np.append(x_E, [x_E_i])
+        y_E = np.append(y_E, [y_E_i])
+        x_M = np.append(x_M, [x_M_i])
+        y_M = np.append(y_M, [y_M_i])
+
+        plt.plot(xs[:(frame)], ys[:(frame)], color='red')
+        plt.plot(x_M[1:], y_M[1:], color='blue')
+        plt.plot(x_E[1:], y_E[1:], color='green')
+        
+
+        plt.xlim(-500000000, 500000000)
+        plt.ylim(-500000000, 500000000)
+        plt.title("t={}".format(frame * dt * 20))
+
+        plt.savefig(f'./{useFileName}/frames/{frame}.png', 
+                    transparent = False,  
+                    facecolor = 'white'
+                )
+
+        plt.close()
+
+    frames = []
+    for frameNum in range(0, len(xs)):
+        image = imageio.v2.imread(f'./{useFileName}/frames/{frameNum}.png')
+        frames.append(image)
+    imageio.mimsave('./{}/animation.gif'.format(useFileName), frames, fps = 20)
 
 
-#Creating a gif
+#Plotting moon to rocket distance
 
-x_E = np.array([0])
-y_E = np.array([0])
+ds = np.array([0])
+ts = np.array([0])
 
-x_M = np.array([0])
-y_M = np.array([0])
+for step in range(0, len(xs)):
+    ds = np.append(ds, d( [ [xs[step], ys[step], 0] , [0, 0, 0] ] , [ [x_M_Circular(step * dt * 20)[0] , x_M_Circular(step * dt * 20)[1], 0] , [0, 0, 0]]) )
+    ts = np.append(ts, [step * dt * 20])
+fig = plt.figure(figsize=(6, 6))
 
-for frame in range(0, len(xs)):
-    fig = plt.figure(figsize=(6, 6))
-
-    x_E_i, y_E_i, z_E_i = x_E_Circular(frame * dt * 20)
-    x_M_i, y_M_i, z_M_i = x_M_Circular(frame * dt * 20)
-
-    x_E = np.append(x_E, [x_E_i])
-    y_E = np.append(y_E, [y_E_i])
-    x_M = np.append(x_M, [x_M_i])
-    y_M = np.append(y_M, [y_M_i])
-
-    plt.plot(xs[:(frame)], ys[:(frame)], color='red')
-    plt.plot(x_M[1:], y_M[1:], color='blue')
-    plt.plot(x_E[1:], y_E[1:], color='green')
-    
-
-    plt.xlim(-500000000, 500000000)
-    plt.ylim(-500000000, 500000000)
-    plt.title("t={}".format(frame * dt * 20))
-
-    plt.savefig(f'./{useFileName}/frames/{frame}.png', 
-                transparent = False,  
-                facecolor = 'white'
-               )
-
-    plt.close()
-
-frames = []
-for frameNum in range(0, len(xs)):
-    image = imageio.v2.imread(f'./{useFileName}/frames/{frameNum}.png')
-    frames.append(image)
-imageio.mimsave('./{}/animation.gif'.format(useFileName), frames, fps = 20)
-
-
-
-#for frame in range(0, len(xs)):
-#    fig = plt.figure(figsize=(6, 6))
-
-#    x_E_i, y_E_i, z_E_i = x_E_Circular(i * dt * 20)
-#    x_M_i, y_M_i, z_M_i = x_M_Circular(i * dt * 20)
-
-#    x_E = np.append(x_E, [x_E_i])
-#    y_E = np.append(y_E, [y_E_i])
-#    x_M = np.append(x_M, [x_M_i])
-#    y_M = np.append(y_M, [y_M_i])
+plt.plot(ts[1:], ds[1:])
+plt.savefig(f'./{useFileName}/d.png', 
+                    transparent = False,  
+                    facecolor = 'white'
+                )
+plt.show()
 
 print("""EXIT SIMULATION""")
