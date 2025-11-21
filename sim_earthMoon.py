@@ -12,7 +12,7 @@ from imports import pd
 from imports import os
 from imports import time
 from functions_evolve import evolve
-from functions_earthMoon import E_M_a_Gravity
+from functions_earthMoon import E_M_a_Gravity, r_M_circular
 from functions_gravity import d
 
 
@@ -103,9 +103,17 @@ for i in range(0, len(xs)):
     x_M = np.append(x_M, [x_M_i])
     y_M = np.append(y_M, [y_M_i])
 
+fig = plt.figure(figsize=(6, 6))
 plt.plot(x_M[1:], y_M[1:], color='blue')
 plt.plot(x_E[1:], y_E[1:], color='green')
 plt.plot(xs, ys, color='red')
+plt.xlim(-500000000, 500000000)
+plt.ylim(-500000000, 500000000)
+
+plt.savefig(f'./{useFileName}/all.png', 
+                    transparent = False,  
+                    facecolor = 'white'
+                )
 
 plt.show()
 plt.close()
@@ -128,7 +136,7 @@ if gifQ == "y":
     x_M = np.array([0])
     y_M = np.array([0])
 
-    for frame in range(0, len(xs)):
+    for frame in range(0, len(xs)): #Return start to 0
         fig = plt.figure(figsize=(6, 6))
 
         x_E_i, y_E_i, z_E_i = x_E_Circular(frame * dt * 20)
@@ -172,9 +180,11 @@ for step in range(0, len(xs)):
     ts = np.append(ts, [step * dt * 20])
 fig = plt.figure(figsize=(6, 6))
 
-plt.plot(ts[1:], ds[1:])
-plt.savefig(f'./{useFileName}/d.png', 
-                    transparent = False,  
+plt.plot(ts[1:], ds[1:] / (445803407.2))
+#plt.plot([0, ts[-1]], [(-1 * (state[0][0] + r_M_circular)), (-1 * (state[0][0] + r_M_circular))], color="black")
+#plt.plot([0, ts[-1]], [0, 0], color="black")
+plt.savefig(f'./{useFileName}/d.png',
+                    transparent = False,
                     facecolor = 'white'
                 )
 plt.show()

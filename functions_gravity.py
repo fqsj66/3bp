@@ -10,7 +10,7 @@ from imports import np
 
 #Constants NEED TO STATE UNITS
 
-G = 6.67430E-11 #Gravitational Constant [m3kg-1s-2], https://www.britannica.com/science/gravitational-constant FOR NOW
+G = 6.6726E-11 #Gravitational Constant [m3kg-1s-2], https://www.britannica.com/science/gravitational-constant FOR NOW
 
 
 #Function for distance between bodies
