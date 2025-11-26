@@ -12,45 +12,33 @@ from imports import pd
 from imports import os
 from imports import time
 from functions_evolve import evolve
-from functions_earthMoon import E_M_a_Gravity, r_M_circular, T_EM
+from functions_earthMoon import E_M_a_Gravity, r_M_circular, T_EM, x_E_Circular, x_M_Circular
 from functions_gravity import d
 
 
+#Function for running the simulation of a rocket for initial state
 
-def L2Run(state, t, dt, T, useMethod, d_initial, useFileName):
+def L2Run(state, dt, T, useMethod, d_initial, useFileName):
     
+    t = 0
 
     os.makedirs("{}".format(useFileName)) #Create a folder to house all the data
 
 
     #Running Simulation
-    print("""
-    -------------------
-    RUNNING SIMULATION:
-    -------------------
-    """)
 
-    print("START: {}".format(time.localtime()))
+    print("START: {}".format(time.asctime(time.localtime())))
 
     evolve(state, t, dt, T, 0, E_M_a_Gravity, useMethod, useFileName)
 
-    print("COMPLETE: {}".format(time.localtime()))
+    print("COMPLETE: {}".format(time.asctime(time.localtime())))
 
 
-    #Plotting
-
-
-    print("""
-    ----------------
-    GENERATING PLOT:
-    ----------------
-    """)
+    #Plotting orbits
 
     output = pd.read_csv("{}/rocket.csv".format(useFileName))
     xs = np.array(output.x)
     ys = np.array(output.y)
-
-    from functions_earthMoon import x_E_Circular, x_M_Circular
 
     x_E = np.array([0])
     y_E = np.array([0])
@@ -76,8 +64,8 @@ def L2Run(state, t, dt, T, useMethod, d_initial, useFileName):
     plt.ylim(-500000000, 500000000)
     plt.title("{}".format(d_initial))
 
-    plt.savefig(f'./{useFileName}/all.png', 
-                        transparent = False,  
+    plt.savefig(f'./{useFileName}/orbits.png',
+                        transparent = False,
                         facecolor = 'white'
                     )
 
@@ -104,76 +92,62 @@ def L2Run(state, t, dt, T, useMethod, d_initial, useFileName):
 
     plt.close()
 
-    print("""EXIT SIMULATION""")
-    
-    return np.array([ds[1], ds[-1]]) #returns start and end values of rocket-moon distance
+
+    #Calculating mean and standard deviation
+
+    dMean = np.sum(ds[1:]) / len(ds[1:])
+    dSd = np.sqrt(  (1 / (len(ds[1:]) - 1))  *  (np.sum(ds[1:] ** 2))  )
+
+    return (dSd / dMean)
+
+    #return np.array([ds[1], ds[-1]]) #returns start and end values of rocket-moon distance
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Inputs
+#Main Method
 
 print("""
 --------------------------------
 EARTH-MOON SYSTEM L2 SIMULATION
 --------------------------------
 
-------
 SETUP:
-------
-
-Initial Rocket Coordinates [SI]:""")
+""")
 
 state = np.zeros((2, 3))
-state[0][0] = -445803407.2 #starting point from project booklet
+#state[0][0] = -445803407.2 #starting point from project booklet
 state[0][1] = 0
 state[0][2] = 0
 state[1][0] = 0
-state[1][1] = state[0][0] * 2 * np.pi / (T_EM) #Circular velocity required for this radius
-print(state[0][0])
-print(state[1][1])
-print(r_M_circular)
-
+#state[1][1] = state[0][0] * 2 * np.pi / (T_EM) #Circular velocity required for this radius
 state[1][2] = 0
 
-print("""
-Simulation Parameters [SI]:""")
+#startingDR = int(input("Starting Point   :")) * -1
+#finishingDR = int(input("Finishing Point  :")) * -1
+#trialsDR = int(input("Num of Runs      :"))
+#dt = int(input("Timestep Size    :"))S
+#useMethod = input("Evolution Method :")
 
-t = 0 #Start time
-dt = float(input("Time step  :"))
-T = T_EM #Time period of orbit
-useMethod = input("Step method (E/T/RK4) :")
+startingDR = -400000000
+finishingDR = -500000000
+trialsDR = 20
+dt = 20
+T = T_EM
+useMethod = "rk4"
+useFileNameMaster = "SEARCH/"
 
-print("""
-Simulation Name:""")
+trials = np.linspace(startingDR, finishingDR, num=trialsDR)
 
-nameOfFile = input("Output file name :")
+dataPrecision = np.array([0])
 
-print("""
-Number of Simulations:""")
+os.makedirs("{}".format(useFileNameMaster))#File to house data files
 
-simNum = input("Sim Num :")
+for trial in trials:
+    state[0][0] = trial
+    state[1][1] = state[0][0] * 2 * np.pi / (T_EM)
+    dataPrecision = np.append(dataPrecision, L2Run(state, dt, T, useMethod, trial, "{}{}".format(useFileNameMaster, trial)))
 
-for n in range(0, int(simNum)): #Loops for the search
-    d_initial =  -1 * state[0][0] - r_M_circular
-    d_startEnd = np.zeros(2)
-    d_startEnd = L2Run(state, t, dt, T, useMethod, d_initial, ("{}_{}_{}".format(nameOfFile, n, str(state[0][0]))))
-    if d_startEnd[0] > d_startEnd[1]:
-        state[0][0] = state[0][0] * 1.01
-    else:
-        state[0][0] = state[0][0] * 0.99
+plt.plot(trials, dataPrecision[1:])
+plt.show()
 
-    #Open file and see if it is further away or closer. then adjust starting state[0][0] accordingly
+
+

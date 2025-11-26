@@ -101,19 +101,19 @@ from imports import np
 
 
 
-from functions_evolve import step_RK4
+#from functions_evolve import step_RK4
 
-x = np.arange(-10, 11)
+#x = np.arange(-10, 11)
 
-def f_a(state, t):
-    return [1, 0, 0]
-def f_v(state, t):
-    return state[1]
+#def f_a(state, t):
+#    return [1, 0, 0]
+#def f_v(state, t):
+#    return state[1]
 
-stateParticular = np.array([[-300000000, 0, 0], [0, 0, 0]])
+#stateParticular = np.array([[-300000000, 0, 0], [0, 0, 0]])
 
-t=0
-dt=1
+#t=0
+#dt=1
 
 #print(step_RK4(stateParticular, t, dt, f_v, f_a))
 
@@ -123,14 +123,19 @@ dt=1
 
 #Creating gif
 
-from imports import pd
-from imports import imageio
+#from imports import pd
+#from imports import imageio
 
-output = pd.read_csv("l2_3/rocket.csv")
-xs = np.array(output.x)
+#output = pd.read_csv("l2_3/rocket.csv")
+#xs = np.array(output.x)
 
-frames = []
-for frameNum in range(0, int(len(xs) / 2)):
-    image = imageio.v2.imread(f'./l2_3/frames/{frameNum}.png')
-    frames.append(image)
-imageio.mimsave('./animation.gif', frames, fps = 20)
+#frames = []
+#for frameNum in range(0, int(len(xs) / 2)):
+#    image = imageio.v2.imread(f'./l2_3/frames/{frameNum}.png')
+#    frames.append(image)
+#imageio.mimsave('./animation.gif', frames, fps = 20)
+
+
+
+testyayayaya = np.array([0, 1, 2, 3, 4])
+print(testyayayaya ** 2)

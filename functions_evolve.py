@@ -55,6 +55,8 @@ def evolve(state, t, dt, T, f_v, f_a, useMethod, useFile): #Evolve motion starti
 
     elif useMethod == "T": #Taylor steps
 
+        print("Taylor confirmed")
+
         for i in range(0, N):
             for j in range(0, 20):
                 state = step_Taylor(state, (t + 20 * i + j), dt, f_v, f_a)
