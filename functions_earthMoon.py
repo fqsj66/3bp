@@ -11,10 +11,10 @@ from functions_gravity import a_Gravity
 
 #Constants NEED TO STATE UNITS ALL SI FOR NOW
 
-G = 6.6726E-11 #Gravitational Constant [m3kg-1s-2], https://www.britannica.com/science/gravitational-constant FOR NOW
-d_EM = 3844E5 #Earth to moon distance [m], https://spaceplace.nasa.gov/moon-distance/en/ FOR NOW
-m_E = 5.9742E24 #Mass of Earth [kg], https://www.britannica.com/science/How-Big-Is-Earth FOR NOW
-m_M = 7.35E22 #Mass of Moon [kg], https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/moon/ FOR NOW
+G = 6.6726E-11 #Gravitational Constant [m3kg-1s-2], project booklet
+d_EM = 3844E5 #Earth to moon distance [m], project booklet
+m_E = 5.9742E24 #Mass of Earth [kg], project booklet
+m_M = 7.35E22 #Mass of Moon [kg], project booklet
 
 r_E_circular = (d_EM * m_M) / (m_E + m_M) #Radius of Earth's orbit MAY NEED TO EXPAND BRACKET TO POWER -1
 r_M_circular = (d_EM * m_E) / (m_E + m_M) #Radius of Moon's orbit

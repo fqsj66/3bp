@@ -24,6 +24,8 @@ def L2Run(state, dt, T, useMethod, d_initial, useFileName):
 
     os.makedirs("{}".format(useFileName)) #Create a folder to house all the data
 
+    startingPositionX = state[0][0]
+    startingPositionY = state[0][1]
 
     #Running Simulation
 
@@ -60,6 +62,8 @@ def L2Run(state, dt, T, useMethod, d_initial, useFileName):
     plt.plot(x_M[1:], y_M[1:], color='blue')
     plt.plot(x_E[1:], y_E[1:], color='green')
     plt.plot(xs, ys, color='red')
+    plt.scatter([startingPositionX], [startingPositionY], color='purple')
+    plt.scatter([- r_M_circular - 65.19E6], [0], color='orange')
     plt.xlim(-500000000, 500000000)
     plt.ylim(-500000000, 500000000)
     plt.title("{}".format(d_initial))
@@ -82,7 +86,7 @@ def L2Run(state, dt, T, useMethod, d_initial, useFileName):
         ts = np.append(ts, [step * dt * 20])
     fig = plt.figure(figsize=(6, 6))
 
-    plt.plot(ts[1:], ds[1:]/ (d_initial))
+    plt.plot(ts[1:], ds[1:] / (abs(d_initial) - r_M_circular))
     #plt.plot([0, ts[-1]], [(-1 * (state[0][0] + r_M_circular)), (-1 * (state[0][0] + r_M_circular))], color="black")
     #plt.plot([0, ts[-1]], [0, 0], color="black")
     plt.savefig(f'./{useFileName}/d.png',
@@ -109,9 +113,10 @@ print("""
 --------------------------------
 EARTH-MOON SYSTEM L2 SIMULATION
 --------------------------------
-
-SETUP:
 """)
+
+r_approx = ((3844E5 * 5.9742E24) / (5.9742E24 + 7.35E22)) + (3844E5 * (7.35E22 / (3 * 5.9742E24)) ** (1 / 3))
+
 
 state = np.zeros((2, 3))
 #state[0][0] = -445803407.2 #starting point from project booklet
@@ -121,19 +126,22 @@ state[1][0] = 0
 #state[1][1] = state[0][0] * 2 * np.pi / (T_EM) #Circular velocity required for this radius
 state[1][2] = 0
 
-#startingDR = int(input("Starting Point   :")) * -1
-#finishingDR = int(input("Finishing Point  :")) * -1
+#print("Parameters: [E7m]")
+#
+#startingDR = int(input("Starting Point   :")) * -10000000
+#finishingDR = int(input("Finishing Point  :")) * -10000000
 #trialsDR = int(input("Num of Runs      :"))
-#dt = int(input("Timestep Size    :"))S
+#dt = int(input("Timestep Size    :"))
 #useMethod = input("Evolution Method :")
+#useFileNameMaster = "{}/".format(str(input("Search File Name :")))
 
-startingDR = -400000000
-finishingDR = -500000000
-trialsDR = 20
-dt = 20
-T = T_EM
+startingDR = -444140462#- r_M_circular - 65.19E6 + 1E6
+finishingDR = -444251573#- r_M_circular - 65.19E6
+trialsDR = 5
+dt = 1
+T = T_EM / 3
 useMethod = "rk4"
-useFileNameMaster = "SEARCH/"
+useFileNameMaster = "SEARCHrk4CloseDetailedSweep3/"
 
 trials = np.linspace(startingDR, finishingDR, num=trialsDR)
 
@@ -141,13 +149,24 @@ dataPrecision = np.array([0])
 
 os.makedirs("{}".format(useFileNameMaster))#File to house data files
 
+print("SEARCH COMMENCING")
+
+iter = 1
 for trial in trials:
+    print("T.{}:".format(str(iter)))
     state[0][0] = trial
-    state[1][1] = state[0][0] * 2 * np.pi / (T_EM)
+    state[1][1] = ((state[0][0]) * 2 * np.pi) / (T_EM)
     dataPrecision = np.append(dataPrecision, L2Run(state, dt, T, useMethod, trial, "{}{}".format(useFileNameMaster, trial)))
+    iter += 1
 
-plt.plot(trials, dataPrecision[1:])
+fig = plt.figure(figsize=(6, 6))
+plt.scatter(trials, dataPrecision[1:])
+plt.savefig(f'./{useFileNameMaster}/deviation.png',
+                        transparent = False,
+                        facecolor = 'white'
+                    )
+print("""
+SEARCH COMPLETE""")
+
 plt.show()
-
-
-
+plt.close()

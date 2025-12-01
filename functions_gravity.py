@@ -24,7 +24,7 @@ def d(state1, state2): #Takes state arrays as input
 #Function for gravitational acceleration due to one body
 
 def a_Gravity_Component(mass, state, stateParticular): #Gives acceleration contribution due to a body with mass and state, acting on stateParticular
-    return -1 * G * mass * (stateParticular[0] - state[0]) * d(state, stateParticular) ** (-3) #Outputs an array with the differing components of acceleration
+    return -1 * G * mass * (stateParticular[0] - state[0]) * (d(state, stateParticular) ** (-3)) #Outputs an array with the differing components of acceleration
 
 
 #Function for gravitational acceleration due to many bodies
