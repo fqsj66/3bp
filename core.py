@@ -135,7 +135,72 @@ from imports import np
 #    frames.append(image)
 #imageio.mimsave('./animation.gif', frames, fps = 20)
 
+#from functions_earthMoon import r_M_circular
+
+#print(0.999999 * (4444248300 - r_M_circular) + r_M_circular) #=
+
+#testyayayaya = np.array([0, 1, 2, 3, 4])
+#print(testyayayaya ** 2)
 
 
-testyayayaya = np.array([0, 1, 2, 3, 4])
-print(testyayayaya ** 2)
+
+
+
+
+#Plotting orbits
+
+output = pd.read_csv("{}/rocket.csv".format(useFileName))
+xs = np.array(output.x)
+ys = np.array(output.y)
+
+x_E = np.array([0])
+y_E = np.array([0])
+
+x_M = np.array([0])
+y_M = np.array([0])
+
+for i in range(0, len(xs)):
+
+    x_E_i, y_E_i, z_E_i = x_E_Circular(i * dt * 20)
+    x_M_i, y_M_i, z_M_i = x_M_Circular(i * dt * 20)
+
+    x_E = np.append(x_E, [x_E_i])
+    y_E = np.append(y_E, [y_E_i])
+    x_M = np.append(x_M, [x_M_i])
+    y_M = np.append(y_M, [y_M_i])
+
+fig = plt.figure(figsize=(6, 6))
+plt.plot(x_M[1:], y_M[1:], color='blue')
+plt.plot(x_E[1:], y_E[1:], color='green')
+plt.plot(xs, ys, color='red')
+plt.scatter([startingPositionX], [startingPositionY], color='purple')
+plt.scatter([- r_M_circular - 65.19E6], [0], color='orange')
+plt.xlim(-500000000, 500000000)
+plt.ylim(-500000000, 500000000)
+plt.title("{}".format(d_initial))
+
+plt.savefig(f'./{useFileName}/orbits.png',
+                    transparent = False,
+                    facecolor = 'white'
+                )
+
+plt.close()
+
+
+#Plotting moon to rocket distance
+
+ds = np.array([0])
+ts = np.array([0])
+
+for step in range(0, len(xs)):
+    ds = np.append(ds, d( [ [xs[step], ys[step], 0] , [0, 0, 0] ] , [ [x_M_Circular(step * dt * 20)[0] , x_M_Circular(step * dt * 20)[1], 0] , [0, 0, 0]]) )
+    ts = np.append(ts, [step * dt * 20])
+fig = plt.figure(figsize=(6, 6))
+
+plt.plot(ts[1:], ds[1:] / (abs(d_initial) - r_M_circular))
+plt.savefig(f'./{useFileName}/d.png',
+                    transparent = False,
+                    facecolor = 'white'
+                )
+
+plt.close()

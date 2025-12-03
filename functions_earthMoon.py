@@ -19,7 +19,7 @@ m_M = 7.35E22 #Mass of Moon [kg], project booklet
 r_E_circular = (d_EM * m_M) / (m_E + m_M) #Radius of Earth's orbit MAY NEED TO EXPAND BRACKET TO POWER -1
 r_M_circular = (d_EM * m_E) / (m_E + m_M) #Radius of Moon's orbit
 
-T_EM = np.sqrt(4 * np.pi ** 2 * d_EM ** 3 / (G * (m_M + m_E))) #Time period of orbit, worked out using K3L, may have to expand sqrt UNSURE IF THIS IS CORRECT
+T_EM = np.sqrt(4 * np.pi ** 2 * d_EM ** 3 / (G * (m_M + m_E))) #Time period of orbit, worked out using K3L, may have to expand sqrt
 
 
 #Functions for the coordinates of Earth and Moon relative to centre of mass (and fixed stars)

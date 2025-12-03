@@ -5,12 +5,14 @@
 
 #Imports
 
+print("Importing Packages...")
 from imports import imageio
 from imports import np
 from imports import plt
 from imports import pd
 from imports import os
 from imports import time
+from imports import csv
 from functions_evolve import evolve
 from functions_earthMoon import E_M_a_Gravity, r_M_circular, T_EM, x_E_Circular, x_M_Circular
 from functions_gravity import d
@@ -100,9 +102,9 @@ def L2Run(state, dt, T, useMethod, d_initial, useFileName):
     #Calculating mean and standard deviation
 
     dMean = np.sum(ds[1:]) / len(ds[1:])
-    dSd = np.sqrt(  (1 / (len(ds[1:]) - 1))  *  (np.sum(ds[1:] ** 2))  )
-
-    return (dSd / dMean)
+    dSd = np.sqrt(  ((len(ds[1:]) - 1) ** -1)  *  (np.sum((ds[1:] - dMean) ** 2))  )
+    
+    return [dSd, dMean]
 
     #return np.array([ds[1], ds[-1]]) #returns start and end values of rocket-moon distance
 
@@ -135,13 +137,13 @@ state[1][2] = 0
 #useMethod = input("Evolution Method :")
 #useFileNameMaster = "{}/".format(str(input("Search File Name :")))
 
-startingDR = -444140462#- r_M_circular - 65.19E6 + 1E6
-finishingDR = -444251573#- r_M_circular - 65.19E6
-trialsDR = 5
+startingDR = -444246000 #-444140462 #- r_M_circular - 65.19E6 + 1E6
+finishingDR = -444250000 #-444251573#- r_M_circular - 65.19E6
+trialsDR = 2
 dt = 1
-T = T_EM / 3
+T = T_EM / 10
 useMethod = "rk4"
-useFileNameMaster = "SEARCHrk4CloseDetailedSweep3/"
+useFileNameMaster = "SEARCH-rk4newSweep dt=1/"
 
 trials = np.linspace(startingDR, finishingDR, num=trialsDR)
 
@@ -151,13 +153,22 @@ os.makedirs("{}".format(useFileNameMaster))#File to house data files
 
 print("SEARCH COMMENCING")
 
+errorsfile = open("{}errors.csv".format(useFileNameMaster), 'w+', newline='')
+writerErrors = csv.writer(errorsfile)
+writerErrors.writerow(["x", "mean", "stdev"])
+
 iter = 1
 for trial in trials:
     print("T.{}:".format(str(iter)))
     state[0][0] = trial
     state[1][1] = ((state[0][0]) * 2 * np.pi) / (T_EM)
-    dataPrecision = np.append(dataPrecision, L2Run(state, dt, T, useMethod, trial, "{}{}".format(useFileNameMaster, trial)))
+    meanAndStdReturn = L2Run(state, dt, T, useMethod, trial, "{}{}".format(useFileNameMaster, trial))
+    dataPrecision = np.append(dataPrecision, (meanAndStdReturn[0] / meanAndStdReturn[1]))
     iter += 1
+
+    writerErrors.writerow([trial, meanAndStdReturn[1], meanAndStdReturn[0]])
+
+f.close()
 
 fig = plt.figure(figsize=(6, 6))
 plt.scatter(trials, dataPrecision[1:])
