@@ -137,13 +137,13 @@ state[1][2] = 0
 #useMethod = input("Evolution Method :")
 #useFileNameMaster = "{}/".format(str(input("Search File Name :")))
 
-startingDR = -444246000 #-444140462 #- r_M_circular - 65.19E6 + 1E6
-finishingDR = -444250000 #-444251573#- r_M_circular - 65.19E6
-trialsDR = 2
+startingDR = -444248400 #-444140462 #- r_M_circular - 65.19E6 + 1E6
+finishingDR = -444248600 #-444251573#- r_M_circular - 65.19E6
+trialsDR = 15
 dt = 1
-T = T_EM / 10
+T = T_EM
 useMethod = "rk4"
-useFileNameMaster = "SEARCH-rk4newSweep dt=1/"
+useFileNameMaster = "SEARCH-rk4biggerSweep dt=1/"
 
 trials = np.linspace(startingDR, finishingDR, num=trialsDR)
 
@@ -168,10 +168,10 @@ for trial in trials:
 
     writerErrors.writerow([trial, meanAndStdReturn[1], meanAndStdReturn[0]])
 
-f.close()
+errorsfile.close()
 
 fig = plt.figure(figsize=(6, 6))
-plt.scatter(trials, dataPrecision[1:])
+plt.scatter((trials * -1), dataPrecision[1:])
 plt.savefig(f'./{useFileNameMaster}/deviation.png',
                         transparent = False,
                         facecolor = 'white'

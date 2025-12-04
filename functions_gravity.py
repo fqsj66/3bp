@@ -18,7 +18,8 @@ G = 6.6726E-11 #Gravitational Constant [m3kg-1s-2], https://www.britannica.com/s
 def d(state1, state2): #Takes state arrays as input
     x_1, y_1, z_1 = state1[0][0], state1[0][1], state1[0][2]
     x_2, y_2, z_2 = state2[0][0], state2[0][1], state2[0][2]
-    return np.sqrt((x_2 - x_1) ** 2 + (y_2 - y_1) ** 2 + (z_2 - z_1) ** 2) #Number output
+    #return np.sqrt((x_2 - x_1) ** 2 + (y_2 - y_1) ** 2 + (z_2 - z_1) ** 2) #Number output
+    return np.hypot(np.hypot(x_2 - x_1, y_2 - y_1), z_2 - z_1)
 
 
 #Function for gravitational acceleration due to one body
