@@ -98,13 +98,12 @@ def L2Run(state, dt, T, useMethod, d_initial, useFileName):
 
     plt.close()
 
-
     #Calculating mean and standard deviation
 
     dMean = np.sum(ds[1:]) / len(ds[1:])
     dSd = np.sqrt(  ((len(ds[1:]) - 1) ** -1)  *  (np.sum((ds[1:] - dMean) ** 2))  )
     
-    return [dSd, dMean]
+    return [dSd, dMean, ds_initial - ds[-1]] #returns the deviation in distance from moon at end of one orbital period
 
     #return np.array([ds[1], ds[-1]]) #returns start and end values of rocket-moon distance
 
@@ -128,50 +127,54 @@ state[1][0] = 0
 #state[1][1] = state[0][0] * 2 * np.pi / (T_EM) #Circular velocity required for this radius
 state[1][2] = 0
 
-#print("Parameters: [E7m]")
-#
-#startingDR = int(input("Starting Point   :")) * -10000000
-#finishingDR = int(input("Finishing Point  :")) * -10000000
-#trialsDR = int(input("Num of Runs      :"))
-#dt = int(input("Timestep Size    :"))
-#useMethod = input("Evolution Method :")
-#useFileNameMaster = "{}/".format(str(input("Search File Name :")))
 
-startingDR = -435500000#-444248457 #-444140462 #- r_M_circular - 65.19E6 + 1E6
-finishingDR = -438500000#-444248475 #-444251573#- r_M_circular - 65.19E6
-trialsDR = 1
-dt = 1
-T = T_EM / 10
-useMethod = "T"
-useFileNameMaster = "SEARCH-TbiggerSweep dt=2/"
 
-trials = np.linspace(startingDR, finishingDR, num=trialsDR)
+
+
+
+startingDR = -444248469
+dt = np.array([0.75, 1, 1.5])
+T = T_EM
+useFileNameMaster = "COMPARING METHODS 1/"
 
 dataPrecision = np.array([0])
+dDeviation = np.array([0])
 
 os.makedirs("{}".format(useFileNameMaster))#File to house data files
 
-print("SEARCH COMMENCING")
+print("DEVIATION CALCULATIONS COMMENCING")
 
-errorsfile = open("{}errors.csv".format(useFileNameMaster), 'w+', newline='')
-writerErrors = csv.writer(errorsfile)
-writerErrors.writerow(["x", "mean", "stdev"])
+errorsfileRK = open("{}errorsRK.csv".format(useFileNameMaster), 'w+', newline='')
+writerErrorsRK = csv.writer(errorsfileRK)
+writerErrorsRK.writerow(["dt", "mean", "stdev", "deviation"])
+
+errorsfileT = open("{}errorsT.csv".format(useFileNameMaster), 'w+', newline='')
+writerErrorsT = csv.writer(errorsfileT)
+writerErrorsT.writerow(["dt", "mean", "stdev", "deviation"])
 
 iter = 1
-for trial in trials:
+for timestep in dt:
     print("T.{}:".format(str(iter)))
     state[0][0] = trial
     state[1][1] = ((state[0][0]) * 2 * np.pi) / (T_EM)
-    meanAndStdReturn = L2Run(state, dt, T, useMethod, trial, "{}{}".format(useFileNameMaster, trial))
-    dataPrecision = np.append(dataPrecision, (meanAndStdReturn[0] / meanAndStdReturn[1]))
+
+    deviationReturnRK = L2Run(state, timestep, T, "rk4", trial, "{}{}".format(useFileNameMaster, timestep))
+    dDeviationRK = np.append(dDeviationRK, deviationReturnRK[0])
+    
+    deviationReturnT = L2Run(state, timestep, T, "T", trial, "{}{}".format(useFileNameMaster, timestep))
+    dDeviationT = np.append(dDeviationT, deviationReturnT[0])
+    
     iter += 1
 
-    writerErrors.writerow([trial, meanAndStdReturn[1], meanAndStdReturn[0]])
+    writerErrorsRK.writerow([trial, deviationReturnRK[0], deviationReturnRK[1], deviationReturnRK[2]])
+    writerErrorsT.writerow([trial, deviationReturnT[0], deviationReturnT[1], deviationReturnT[2]])
 
-errorsfile.close()
+errorsfileRK.close()
+errorsfileT.close()
 
 fig = plt.figure(figsize=(6, 6))
-plt.scatter((trials * -1), dataPrecision[1:])
+plt.plot(dt, dDeviationRK[1:], color="red")
+plt.plot(dt, dDeviationT[1:], color="orange")
 plt.savefig(f'./{useFileNameMaster}/deviation.png',
                         transparent = False,
                         facecolor = 'white'
