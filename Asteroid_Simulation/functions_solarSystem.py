@@ -11,6 +11,7 @@
 
 # Imports
 from imports import np
+from functions_gravity import a_Gravity
 
 
 # Constants
@@ -22,14 +23,17 @@ a_M = 227.956E9 #Mars [m], https://www.smartconversion.com/factsheet/solar-syste
 a_J = 778.57E9 #Jupiter [m], https://radiojove.gsfc.nasa.gov/education/jupiter/basics/jfacts.htm
 
 #Masses
-m_Su = 1989100E24 #Sun [kg], https://radiojove.gsfc.nasa.gov/education/sun/basics/material/sunfacts.htm
+m_Sol = 1989100E24 #Sun [kg], https://radiojove.gsfc.nasa.gov/education/sun/basics/material/sunfacts.htm
+m_J = 1898.6E24 #Jupiter [kg], https://radiojove.gsfc.nasa.gov/education/jupiter/basics/jfacts.htm
 
 #Orbital Periods
-T_M = 2 * np.pi * ((a_M) / (G * m_Su)) ** (0.5)
-T_J = 2 * np.pi * ((a_J) / (G * m_Su)) ** (0.5)
+T_M = 2 * np.pi * ((a_M) / (G * m_Sol)) ** (0.5)
+T_J = 2 * np.pi * ((a_J) / (G * m_Sol)) ** (0.5)
 
 
 # Functions
+
+#Positions of bodies
 
 def x_E(timestepNum, timestep): #Less Important
     return ()
@@ -56,3 +60,18 @@ def x_J_Circular(timestepNum, timestep):
     x = a_J * np.cos(angle)
     y = a_J * np.sin(angle)
     return np.array([x, y, 0])
+
+def x_Sol(timestepNum, timestep):
+    return np.array([0, 0, 0])
+
+#Gravity functions
+
+def Sol_J_a_Gravity(stateParticular, N, dt): #Acceleration due to gravity of asteroid at stateParticular due to Sun and Jupiter system
+    masses = np.array([m_Sol, m_J])
+    states = np.array([[[0, 0, 0], [0, 0, 0]], [tuple(x_J_Circular(N, dt)), [0, 0, 0]]]) #Set velocities to zero because these are redundant in the calculation, force of gravity independent of velocities
+    return a_Gravity(masses, states, stateParticular)
+
+def Sol_a_Gravity(stateParticular, N, dt): #Acceleration due to gravity of asteroid due to only the Sun (for testing purposes)
+    masses = np.array([m_Sol])
+    states = np.array([[[0, 0, 0], [0, 0, 0]]]) #Set velocities to zero because these are redundant in the calculation, force of gravity independent of velocities
+    return a_Gravity(masses, states, stateParticular)
