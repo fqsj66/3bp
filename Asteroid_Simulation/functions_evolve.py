@@ -41,17 +41,19 @@ def step_RK4(state, N, dt, f_v, f_a): #f_v is  redundant, N is the timestep numb
     xNew = state[0] + (dt / 6) * (state[1] + 2 * v1 + 2 * v2 + v3)
     vNew = state[1] + (dt / 6) * (a0 + 2 * a1 + 2 * a2 + a3)
 
+    print(a0)
+
     return np.array([(xNew), (vNew)])
 
 #def step_RK45_dydx(t, state4RK45): #THIS WORKS ONLY FOR EARTH MOON SYSTEM
 #    stateInsideThisF = np.array([[state4RK45[0], state4RK45[1], state4RK45[2]], [state4RK45[3], state4RK45[4], state4RK45[5]]])
 #    return np.array([stateInsideThisF[1][0], stateInsideThisF[1][1], stateInsideThisF[1][2], E_M_a_Gravity(stateInsideThisF, t)[0], E_M_a_Gravity(stateInsideThisF, t)[1], E_M_a_Gravity(stateInsideThisF, t)[2]])
 
-def step_RK45(state, t, dt, f_v, f_a):
-    state4RK45 = np.array([state[0][0], state[0][1], state[0][2], state[1][0], state[1][1], state[1][2]])
-    RK4ScipySolver = scipy.integrate.RK45(step_RK45_dydx, t, state4RK45, 3E6, first_step=dt, max_step=dt)
-    RK4ScipySolver.step()
-    return np.array([[RK4ScipySolver.y[0], RK4ScipySolver.y[1], RK4ScipySolver.y[2]], [RK4ScipySolver.y[3], RK4ScipySolver.y[4], RK4ScipySolver.y[5]]])
+#def step_RK45(state, t, dt, f_v, f_a):
+#    state4RK45 = np.array([state[0][0], state[0][1], state[0][2], state[1][0], state[1][1], state[1][2]])
+#    RK4ScipySolver = scipy.integrate.RK45(step_RK45_dydx, t, state4RK45, 3E6, first_step=dt, max_step=dt)
+#    RK4ScipySolver.step()
+#    return np.array([[RK4ScipySolver.y[0], RK4ScipySolver.y[1], RK4ScipySolver.y[2]], [RK4ScipySolver.y[3], RK4ScipySolver.y[4], RK4ScipySolver.y[5]]])
 
 
 #Function for multiple steps forward

@@ -44,3 +44,18 @@ def a_Gravity(masses, states, stateParticular):#Takes list of masses and states 
 
 def v_Gravity(masses, states, stateParticular): #"Dummy" function for step & evolution functions
     return stateParticular[1] #Simply returns the velocity vector of the state
+
+
+#Functions for converting between positions & velocities and a & e
+
+def rv_from_ae(a, e): #Gives initial state vector at periapse given semi-major axis and eccentricity
+    return np.array([[a(1-e), 0, 0], [0, np.sqrt((1 + e) / (a * (1-e))), 0]])
+
+def ae_from_rv(state, m): #m should be total mass of two bodies, but assume that mass of sun >> asteroid mass so should just be sun's mass (for calculating mu)
+    vSqr = np.sum(state[1] ** 2)
+    v = np.sqrt(vSqr)
+    r = np.sqrt(np.sum(state[0] ** 2))
+    a = (vSqr / (G * m) - 2 / r) ** -1
+    sinTheta = np.sqrt(np.sum(np.cross(state[0], state[1]) ** 2)) / (r * v)
+    e = (1 - (sinTheta ** 2 * r * (2 * a - r)) / (a ** 2)) ** 0.5
+    return a, e
