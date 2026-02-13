@@ -48,14 +48,21 @@ def v_Gravity(masses, states, stateParticular): #"Dummy" function for step & evo
 
 #Functions for converting between positions & velocities and a & e
 
-def rv_from_ae(a, e): #Gives initial state vector at periapse given semi-major axis and eccentricity
-    return np.array([[a(1-e), 0, 0], [0, np.sqrt((1 + e) / (a * (1-e))), 0]])
+def rv_from_ae(a, e, m): #Gives initial state vector at periapse given semi-major axis, eccentricity and mass sum (same approx. as below)
+    return np.array([[a * (1-e), 0, 0], [0, np.sqrt(G * m * (1 + e) / (a * (1-e))), 0]])
 
 def ae_from_rv(state, m): #m should be total mass of two bodies, but assume that mass of sun >> asteroid mass so should just be sun's mass (for calculating mu)
     vSqr = np.sum(state[1] ** 2)
     v = np.sqrt(vSqr)
     r = np.sqrt(np.sum(state[0] ** 2))
-    a = (vSqr / (G * m) - 2 / r) ** -1
-    sinTheta = np.sqrt(np.sum(np.cross(state[0], state[1]) ** 2)) / (r * v)
-    e = (1 - (sinTheta ** 2 * r * (2 * a - r)) / (a ** 2)) ** 0.5
+    a = np.abs((vSqr / (G * m) - 2 / r) ** -1)
+    #sinTheta = np.sqrt(np.sum(np.cross(state[0], state[1]) ** 2)) / (r * v)
+    #e = (1 - (sinTheta ** 2 * r * (2 * a - r)) / (a ** 2)) ** 0.5
+    e = np.sqrt(1 + 2 / ((G * m ) ** 2) * np.sum(np.cross(state[0], state[1]) ** 2) * (vSqr / 2 - G * m / r))
+
     return a, e
+
+def aei_from_rv(state, m): #Same as the above function but includes inclination
+    a, e = ae_from_rv(state, m)
+    i = np.arccos(state[0][2] / np.sqrt(np.sum(state[0]) ** 2)) #dot product angle approach
+    return a, e, i

@@ -21,14 +21,22 @@ T = T_J * 100
 asteroidNum = 50
 eMax = 0.4
 
-#Code
+newSim = True
+startingFile = "Simulations/1/example.csv"
 
-population = asteroidPopulation_line_elliptical(asteroidNum, eMax)
-endpoints = np.zeros((asteroidNum, 2, 3))
-end_x = np.zeros(asteroidNum)
-end_y = np.zeros(asteroidNum)
-start_x = np.zeros(asteroidNum)
-start_y = np.zeros(asteroidNum)
+
+#ACTUAL CODE
+
+#Deciding whether to start new simulation of not
+if newSim == False:
+    #CONTINUE ON FROM HERE, LOOKING AT HOW TO LOAD FROM A CSV FILE, AND EVENTUALLY WRITE TO ONE AT THE END OF COURSE
+else:
+    population = asteroidPopulation_line_elliptical(asteroidNum, eMax)
+    endpoints = np.zeros((asteroidNum, 2, 3))
+    end_x = np.zeros(asteroidNum)
+    end_y = np.zeros(asteroidNum)
+    start_x = np.zeros(asteroidNum)
+    start_y = np.zeros(asteroidNum)
 
 print("START: {}".format(time.asctime(time.localtime())))
 
@@ -40,6 +48,14 @@ for i in range(0, asteroidNum):
     start_y[i] = population[i][0][1]
 
 print("END: {}".format(time.asctime(time.localtime())))
+
+
+
+
+
+
+#OUTPUTS
+
 
 #print(start_x)
 #print(start_y)

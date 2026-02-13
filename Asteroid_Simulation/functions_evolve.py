@@ -41,7 +41,7 @@ def step_RK4(state, N, dt, f_v, f_a): #f_v is  redundant, N is the timestep numb
     xNew = state[0] + (dt / 6) * (state[1] + 2 * v1 + 2 * v2 + v3)
     vNew = state[1] + (dt / 6) * (a0 + 2 * a1 + 2 * a2 + a3)
 
-    print(a0)
+    #print(a0)
 
     return np.array([(xNew), (vNew)])
 
@@ -77,3 +77,7 @@ def evolve(state, t, dt, T, f_v, f_a, useMethod, useFile): #Evolve motion starti
     #f.close()
 
     return state
+
+def evolve_vf(states, t, dt, T, f_a): #Vectorised version of evolve for RK4, self contained
+    # Would need to re-work through plenty of code ... :(
+    return 1 #placeholder
