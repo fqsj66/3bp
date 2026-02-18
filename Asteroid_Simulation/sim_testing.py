@@ -22,6 +22,13 @@ asteroidNum = 100
 
 #Code
 
+#print(np.array([0, 1, 2, 3, 4, 5])[1:])
+#print(np.array([0, 1, 2, 3, 4, 5]) + 1)
+
+population = np.array([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]], [[13, 14, 15], [16, 17, 18]], [["x", "y", "z"], ["vx", "vy", "vz"]]])
+
+print(np.transpose(population, (1, 2, 0)))
+
 population = asteroidPopulation_line_elliptical(asteroidNum, 0.3)
 endpoints = np.zeros((asteroidNum, 2, 3))
 end_x = np.zeros(asteroidNum)

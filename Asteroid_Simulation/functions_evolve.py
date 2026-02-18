@@ -71,13 +71,55 @@ def evolve(state, t, dt, T, f_v, f_a, useMethod, useFile): #Evolve motion starti
     else: #RK4 steps
 
         for j in range(0, N):
-            state = step_RK4(state, N, dt, f_v, f_a)
+            state = step_RK4(state, np.array([N, N]), dt, f_v, f_a)#This little [N, N] array is so that Sol_M_J_a_Gravity can be edited for different M and J timesteps
             #print(state)
     
     #f.close()
 
     return state
 
+
+
 def evolve_vf(states, t, dt, T, f_a): #Vectorised version of evolve for RK4, self contained
     # Would need to re-work through plenty of code ... :(
     return 1 #placeholder
+
+
+
+
+
+
+
+
+def evolve2(state, N_start, dt, T, f_a): #Evolve corresponding to sim_mainBelt2
+    
+    N_end = int(np.round(T / dt)) + 1 #Number of timesteps needed
+    print("Evolving Asteroid with N = {}".format(N_end))
+    for j in range(0, N_end):
+        state = step_RK42(state, N_start + j, dt, f_a)
+
+    return state
+
+
+def step_RK42(state, N, dt, f_a): #RK4 step corresponding to sim_mainBelt2
+
+    a0 = f_a(state, N, dt)
+
+    x1 = state[0] + (dt / 2) * state[1]
+    v1 = state[1] + (dt / 2) * a0
+    a1 = f_a(np.array([x1, v1]), N, dt)
+
+    x2 = state[0] + (dt / 2) * v1
+    v2 = state[1] + (dt / 2) * a1
+    a2 = f_a(np.array([x2, v2]), N, dt)
+
+    x3 = state[0] + dt * v2
+    v3 = state[1] + dt * a2
+    a3 = f_a(np.array([x3, v3]), N, dt)
+
+    xNew = state[0] + (dt / 6) * (state[1] + 2 * v1 + 2 * v2 + v3)
+    vNew = state[1] + (dt / 6) * (a0 + 2 * a1 + 2 * a2 + a3)
+
+    #print(a0)
+
+    return np.array([(xNew), (vNew)])

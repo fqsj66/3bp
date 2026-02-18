@@ -68,8 +68,9 @@ def x_Sol(timestepNum, timestep):
 #Gravity functions
 
 def Sol_M_J_a_Gravity(stateParticular, N, dt): #Acceleration due to gravity of asteroid at stateParticular due to Sun and Jupiter system
+    #N is an array where the first element is the timestep number for Mars and the second is for Jupiter
     masses = np.array([m_Sol, m_M, m_J])
-    states = np.array([[[0, 0, 0], [0, 0, 0]], [tuple(x_M_Circular(N, dt)), [0, 0, 0]], [tuple(x_J_Circular(N, dt)), [0, 0, 0]]]) #Set velocities to zero because these are redundant in the calculation, force of gravity independent of velocities
+    states = np.array([[[0, 0, 0], [0, 0, 0]], [tuple(x_M_Circular(N[0], dt)), [0, 0, 0]], [tuple(x_J_Circular(N[1], dt)), [0, 0, 0]]]) #Set velocities to zero because these are redundant in the calculation, force of gravity independent of velocities
     return a_Gravity(masses, states, stateParticular)
 
 def Sol_J_a_Gravity(stateParticular, N, dt): #Acceleration due to gravity of asteroid at stateParticular due to Sun and Jupiter system
