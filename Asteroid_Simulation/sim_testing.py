@@ -22,6 +22,7 @@ asteroidNum = 100
 
 #Code
 
+#print(np.abs(np.array([0, 1, 2, 3, 4]) - np.array([0, 1, 3, -1, 0])))
 #print(np.array([0, 1, 2, 3, 4, 5])[1:])
 #print(np.array([0, 1, 2, 3, 4, 5]) + 1)
 

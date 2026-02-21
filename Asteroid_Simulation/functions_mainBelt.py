@@ -12,8 +12,10 @@ from functions_gravity import rv_from_ae
 
 G = 6.6726E-11 #Gravitational Constant [m3kg-1s-2], project booklet
 AU = 1.496E11
-startR = 230E9 #These not full belt, hopefully just enough for two prominent kirkwood gaps
-endR = 230E9 + AU
+startR = 2.4 * AU
+endR = 2.6 * AU
+#startR = 230E9 #These not full belt, hopefully just enough for two prominent kirkwood gaps
+#endR = 230E9 + AU
 
 
 #Functions
@@ -34,6 +36,7 @@ def asteroidPopulation_line_elliptical(Num, eMax):
         eccentricity[i] = rnd.uniform(0, eMax)
         semimajoraxis[i] = ((endR - startR) * i / Num) + startR
         population[i] = rv_from_ae(((endR - startR) * i / Num) + startR, eccentricity[i], m_Sol)
+        #population[i][0][2] = 1 #NEED TO ADD SMALL DEVIATIONS LATER
     plt.scatter(semimajoraxis / AU, eccentricity)
     plt.show()
     print("""

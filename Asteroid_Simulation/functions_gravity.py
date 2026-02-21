@@ -36,7 +36,10 @@ def a_Gravity_Component(mass, state, stateParticular): #Gives acceleration contr
 def a_Gravity(masses, states, stateParticular):#Takes list of masses and states (3D array of 2D state arrays) and the x and the state of the body which acceleration is being calculated for
     aGravityTotal = np.zeros(3)
     for i in range(0, len(masses)):
+        print("Particle at {}".format(stateParticular))
+        print("{} gravity Component = {}".format(i, a_Gravity_Component(masses[i], states[i], stateParticular)))
         aGravityTotal += a_Gravity_Component(masses[i], states[i], stateParticular) #Watch out that aGravityTotal doesn't become much larger than each component
+    
     return aGravityTotal
 
 
@@ -63,6 +66,14 @@ def ae_from_rv(state, m): #m should be total mass of two bodies, but assume that
     return a, e
 
 def aei_from_rv(state, m): #Same as the above function but includes inclination
+    print("MAKING INCLINATIONS:")
     a, e = ae_from_rv(state, m)
-    i = np.arccos(state[0][2] / np.sqrt(np.sum(state[0]) ** 2)) #dot product angle approach
+    print(state[0][2])
+    print((state[0]))
+    print((state[0]) ** 2)
+    print(np.sum(state[0] ** 2))
+    print(np.sqrt(np.sum(state[0] ** 2)))
+    print(np.arccos(state[0][2] / np.sqrt(np.sum(state[0] ** 2))))
+    i = np.pi / 2 -  np.arccos(state[0][2] / np.sqrt(np.sum(state[0] ** 2))) #dot product angle approach
+    print(i)
     return a, e, i
