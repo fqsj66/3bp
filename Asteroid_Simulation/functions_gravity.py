@@ -22,6 +22,9 @@ def d(state1, state2): #Takes state arrays as input
     stateDiff = state2 - state1
     return np.hypot(np.hypot(stateDiff[0][0], stateDiff[0][1]), stateDiff[0][2])
 
+def d_V(xs1, ys1, zs1, x2, y2, z2): #Same as above but vectorised. First 3 arguments are arrays. Last 3 are numbers for planet
+    return np.sqrt((x2 - xs1) ** 2 + (y2 - ys1) ** 2 + (z2 - zs1) ** 2)
+
 
 #Function for gravitational acceleration due to one body
 
@@ -29,18 +32,36 @@ def a_Gravity_Component(mass, state, stateParticular): #Gives acceleration contr
     distanceBetweenBodies = d(state, stateParticular)  #Below used to be -1 * G * mass * (stateParticular[0] - state[0]) * (d(state, stateParticular) ** (-3))
     distanceReciprocalCubed = 1 / (distanceBetweenBodies * distanceBetweenBodies * distanceBetweenBodies)
     return -1 * G * mass * (stateParticular[0] - state[0]) * distanceReciprocalCubed #Outputs an array with the differing components of acceleration
-    
+
+def a_Gravity_Component_V(mass, xs, ys, zs, x2, y2, z2): #Same as above but vectorised
+    distancesBetweenBodies = d_V(xs, ys, zs, x2, y2, z2)
+    distancesReciprocalCubed = 1 / (distancesBetweenBodies * distancesBetweenBodies * distancesBetweenBodies)
+    ax = -1 * G * mass * (xs - x2) * distancesReciprocalCubed
+    ay = -1 * G * mass * (ys - y2) * distancesReciprocalCubed
+    az = -1 * G * mass * (zs - z2) * distancesReciprocalCubed
+    return ax, ay, az
 
 #Function for gravitational acceleration due to many bodies
 
 def a_Gravity(masses, states, stateParticular):#Takes list of masses and states (3D array of 2D state arrays) and the x and the state of the body which acceleration is being calculated for
     aGravityTotal = np.zeros(3)
     for i in range(0, len(masses)):
-        print("Particle at {}".format(stateParticular))
-        print("{} gravity Component = {}".format(i, a_Gravity_Component(masses[i], states[i], stateParticular)))
+        #print("Particle at {}".format(stateParticular))
+        #print("{} gravity Component = {}".format(i, a_Gravity_Component(masses[i], states[i], stateParticular)))
         aGravityTotal += a_Gravity_Component(masses[i], states[i], stateParticular) #Watch out that aGravityTotal doesn't become much larger than each component
     
     return aGravityTotal
+
+def a_Gravity_V(masses, xs, ys, zs, xs2, ys2, zs2): #Same as above but vectorised. arrays for all the arguments
+    ax = 0
+    ay = 0
+    az = 0
+    for i in range(0, len(masses)): #Only 3 loops for main simulations so computationally justifiable
+        axNew, ayNew, azNew = a_Gravity_Component_V(masses[i], xs, ys, zs, xs2[i], ys2[i], zs2[i])
+        ax += axNew
+        ay += axNew
+        az += axNew
+    return ax, ay, az
 
 
 #Function for gravitational velocity impact (none)

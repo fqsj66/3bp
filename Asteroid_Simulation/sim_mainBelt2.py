@@ -17,12 +17,12 @@ from functions_gravity import ae_from_rv
 timestepNum = 0 #Save timestepNum s for each planet. Need to keep running count of how many revolutions Jupiter has done so that can tell how long the simulation is running for in in-simulation time
 timestep = T_J / 1000
 print("Timestep = {}s".format(timestep))
-T = T_J / 999#T_J * 100
-asteroidNum = 1#100
+T = T_J / 50#T_J * 100
+asteroidNum = 5#100
 eMax = 0.3
 
 newSim = True
-startingDirectory = "SimTestingGravity"
+startingDirectory = "SimTestingVectorisedNon"
 
 
 #ACTUAL CODE
@@ -54,6 +54,12 @@ while True:
         populationTrans[1][0] = np.array(fileStart.v_x)[1:]
         populationTrans[1][1] = np.array(fileStart.v_y)[1:]
         populationTrans[1][2] = np.array(fileStart.v_z)[1:]
+        print(populationTrans[0][0])
+        print(populationTrans[0][1])
+        print(populationTrans[0][2])
+        print(populationTrans[1][0])
+        print(populationTrans[1][1])
+        print(populationTrans[1][2])
         population = np.transpose(populationTrans, (2, 0, 1))
 
     else:
@@ -61,6 +67,7 @@ while True:
         os.makedirs('Simulations\{}'.format(startingDirectory))
         N_start = np.array([0, 0])
         population = asteroidPopulation_line_elliptical(asteroidNum, eMax)
+        print(population)
 
     #end_x = np.zeros(asteroidNum)
     #end_y = np.zeros(asteroidNum)

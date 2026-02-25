@@ -22,6 +22,33 @@ asteroidNum = 100
 
 #Code
 
+xs1 = np.array([1, 2, 3, 4])
+xs2 = 10
+
+print(xs1[1])
+
+a = 1
+b = 2
+c = 3
+d = 4
+
+q = 0
+w = 0
+e = 0
+r = 0
+
+#q, w, e, r += a, b, c, d #This doesn't work, very sad :,(
+print(q)
+print(w)
+print(e)
+print(r)
+
+print(xs1 * xs1 * xs1)
+
+print((xs2 - xs1) ** 2)
+print((xs2 - xs1) ** 2 + (xs2 - xs1) ** 2)
+print(np.sqrt((xs2 - xs1) ** 2 + (xs2 - xs1) ** 2 ))
+
 #print(np.abs(np.array([0, 1, 2, 3, 4]) - np.array([0, 1, 3, -1, 0])))
 #print(np.array([0, 1, 2, 3, 4, 5])[1:])
 #print(np.array([0, 1, 2, 3, 4, 5]) + 1)
