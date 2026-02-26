@@ -78,8 +78,8 @@ def Sol_M_J_a_Gravity_V(xs, ys, zs, N, dt): #Same as above but vectorised compat
     masses = np.array([m_Sol, m_M, m_J])
     M_coords = x_M_Circular(N[0], dt)
     J_coords = x_J_Circular(N[0], dt)
-    xs2 = np.array([0, M_coords[0], J_coords[1]])
-    ys2 = np.array([0, M_coords[1], J_coords[2]])
+    xs2 = np.array([0, M_coords[0], J_coords[0]])
+    ys2 = np.array([0, M_coords[1], J_coords[1]])
     zs2 = np.array([0, 0, 0])
     return a_Gravity_V(masses, xs, ys, zs, xs2, ys2, zs2)
 

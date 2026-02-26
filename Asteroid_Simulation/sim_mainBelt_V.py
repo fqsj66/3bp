@@ -17,8 +17,8 @@ from functions_gravity import ae_from_rv
 timestepNum = 0 #Save timestepNum s for each planet. Need to keep running count of how many revolutions Jupiter has done so that can tell how long the simulation is running for in in-simulation time
 timestep = T_J / 1000
 print("Timestep = {}s".format(timestep))
-T = T_J / 50
-asteroidNum = 5
+T = T_J * 20
+asteroidNum = 20
 eMax = 0.3
 
 newSim = True

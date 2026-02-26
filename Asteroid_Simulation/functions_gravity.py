@@ -31,6 +31,7 @@ def d_V(xs1, ys1, zs1, x2, y2, z2): #Same as above but vectorised. First 3 argum
 def a_Gravity_Component(mass, state, stateParticular): #Gives acceleration contribution due to a body with mass and state, acting on stateParticular
     distanceBetweenBodies = d(state, stateParticular)  #Below used to be -1 * G * mass * (stateParticular[0] - state[0]) * (d(state, stateParticular) ** (-3))
     distanceReciprocalCubed = 1 / (distanceBetweenBodies * distanceBetweenBodies * distanceBetweenBodies)
+    #print("Component: {}".format(-1 * G * mass * (stateParticular[0] - state[0]) * distanceReciprocalCubed))
     return -1 * G * mass * (stateParticular[0] - state[0]) * distanceReciprocalCubed #Outputs an array with the differing components of acceleration
 
 def a_Gravity_Component_V(mass, xs, ys, zs, x2, y2, z2): #Same as above but vectorised
@@ -39,6 +40,7 @@ def a_Gravity_Component_V(mass, xs, ys, zs, x2, y2, z2): #Same as above but vect
     ax = -1 * G * mass * (xs - x2) * distancesReciprocalCubed
     ay = -1 * G * mass * (ys - y2) * distancesReciprocalCubed
     az = -1 * G * mass * (zs - z2) * distancesReciprocalCubed
+    #print("Components: {} {} {}".format(ax, ay, az))
     return ax, ay, az
 
 #Function for gravitational acceleration due to many bodies
@@ -50,6 +52,8 @@ def a_Gravity(masses, states, stateParticular):#Takes list of masses and states 
         #print("{} gravity Component = {}".format(i, a_Gravity_Component(masses[i], states[i], stateParticular)))
         aGravityTotal += a_Gravity_Component(masses[i], states[i], stateParticular) #Watch out that aGravityTotal doesn't become much larger than each component
     
+    #print(aGravityTotal)
+
     return aGravityTotal
 
 def a_Gravity_V(masses, xs, ys, zs, xs2, ys2, zs2): #Same as above but vectorised. arrays for all the arguments
@@ -59,8 +63,11 @@ def a_Gravity_V(masses, xs, ys, zs, xs2, ys2, zs2): #Same as above but vectorise
     for i in range(0, len(masses)): #Only 3 loops for main simulations so computationally justifiable
         axNew, ayNew, azNew = a_Gravity_Component_V(masses[i], xs, ys, zs, xs2[i], ys2[i], zs2[i])
         ax += axNew
-        ay += axNew
-        az += axNew
+        ay += ayNew
+        az += azNew
+    #print(ax)
+    #print(ay)
+    #print(az)
     return ax, ay, az
 
 
