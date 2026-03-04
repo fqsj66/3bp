@@ -12,8 +12,8 @@ from functions_gravity import rv_from_ae
 
 G = 6.6726E-11 #Gravitational Constant [m3kg-1s-2], project booklet
 AU = 1.496E11
-startR = 2.4 * AU
-endR = 2.6 * AU
+startR = 2.1 * AU
+endR = 2.9 * AU
 #startR = 230E9 #These not full belt, hopefully just enough for two prominent kirkwood gaps
 #endR = 230E9 + AU
 
@@ -71,23 +71,23 @@ def asteroidPopulation_line_elliptical_V(Num, eMax): #Same as above but with vec
         vxs[i] = population[i][1][0]
         vys[i] = population[i][1][1]
         vzs[i] = population[i][1][2]
-    plt.scatter(semimajoraxis / AU, eccentricity)
-    plt.show()
-    print("""
-          Starting orbitals:""")
-    print(semimajoraxis)
-    print(eccentricity)
-    print("""
-          """)
+    #plt.scatter(semimajoraxis / AU, eccentricity)
+    #plt.show()
+    #print("""
+    #      Starting orbitals:""")
+    #print(semimajoraxis)
+    #print(eccentricity)
+    #print("""
+    #      """)
     
-    print(population)
+    #print(population)
 
-    print(xs)
-    print(ys)
-    print(zs)
-    print(vxs)
-    print(vys)
-    print(vzs)
+    #print(xs)
+    #print(ys)
+    #print(zs)
+    #print(vxs)
+    #print(vys)
+    #print(vzs)
 
 
     return xs, ys, zs, vxs, vys, vzs

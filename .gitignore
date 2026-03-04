@@ -214,3 +214,5 @@ __marimo__/
 *.png
 *.gif
 Asteroid_Simulation/Simulations
+Asteroid_Simulation/sim_testing.py
+Asteroid_Simulation/testing.py

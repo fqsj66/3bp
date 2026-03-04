@@ -94,14 +94,14 @@ def ae_from_rv(state, m): #m should be total mass of two bodies, but assume that
     return a, e
 
 def aei_from_rv(state, m): #Same as the above function but includes inclination
-    print("MAKING INCLINATIONS:")
+    #print("MAKING INCLINATIONS:")
     a, e = ae_from_rv(state, m)
-    print(state[0][2])
-    print((state[0]))
-    print((state[0]) ** 2)
-    print(np.sum(state[0] ** 2))
-    print(np.sqrt(np.sum(state[0] ** 2)))
-    print(np.arccos(state[0][2] / np.sqrt(np.sum(state[0] ** 2))))
+    #print(state[0][2])
+    #print((state[0]))
+    #print((state[0]) ** 2)
+    #print(np.sum(state[0] ** 2))
+    #print(np.sqrt(np.sum(state[0] ** 2)))
+    #print(np.arccos(state[0][2] / np.sqrt(np.sum(state[0] ** 2))))
     i = np.pi / 2 -  np.arccos(state[0][2] / np.sqrt(np.sum(state[0] ** 2))) #dot product angle approach
-    print(i)
+    #print(i)
     return a, e, i

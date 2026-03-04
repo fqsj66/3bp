@@ -22,6 +22,8 @@ asteroidNum = 100
 
 #Code
 
+print('X' * 100)
+
 xs1 = np.array([1, 2, 3, 4])
 xs2 = 10
 

@@ -140,6 +140,16 @@ def evolve_V(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a): #Vectorised versio
 
 
 
+def evolve_V_P(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a, q): #Same as above but for parallel processing
+
+    N_end = int(np.round(T / dt)) + 1 #Number of timesteps needed
+    print("Evolving Asteroids with N = {}".format(N_end))
+    for j in range(0, N_end):
+        xs, ys, zs, vxs, vys, vzs = step_RK4_V(xs, ys, zs, vxs, vys, vzs, N_start + j, dt, f_a)
+
+    q.put(np.array([xs, ys, zs, vxs, vys, vzs])) #q is a queue object in mp module
+
+
 
 
 
