@@ -11,7 +11,7 @@ from functions_gravity import aei_from_rv
 
 #Loading data from file
 
-startingDirectory = "SimVectorisedWide"
+startingDirectory = "Sim_V_i_Wide"
 
 files = os.listdir('Simulations\{}'.format(startingDirectory))
 paths = [os.path.join('Simulations\{}'.format(startingDirectory), basename) for basename in files]
@@ -65,16 +65,21 @@ population0 = np.transpose(populationTrans0, (2, 0, 1))
 
 #Calculating orbital parameters
 
-semimajoraxes = np.zeros(len(fileStart) - 1)
-eccentricities = np.zeros(len(fileStart) - 1)
-inclinations = np.zeros(len(fileStart) - 1)
+semimajoraxes = []#np.zeros(len(fileStart) - 1)
+eccentricities = []#np.zeros(len(fileStart) - 1)
+inclinations = []#np.zeros(len(fileStart) - 1)
 
 semimajoraxes0 = np.zeros(len(fileFirstPass) - 1)
 eccentricities0 = np.zeros(len(fileFirstPass) - 1)
 inclinations0 = np.zeros(len(fileFirstPass) - 1)
 
 for i in range(0, len(fileStart) - 1):
-    semimajoraxes[i], eccentricities[i], inclinations[i] = aei_from_rv(population[i], m_Sol)
+    semimajoraxesi, eccentricitiesi, inclinationsi = aei_from_rv(population[i], m_Sol)
+    
+    if True: #(semimajoraxesi / AU) > 2.4 and (semimajoraxesi / AU) < 2.6:
+        semimajoraxes.append(semimajoraxesi)
+        eccentricities.append(eccentricitiesi)
+        inclinations.append(inclinationsi)
 
 for j in range(0, len(fileFirstPass) - 1):
     semimajoraxes0[j], eccentricities0[j], inclinations0[j] = aei_from_rv(population0[j], m_Sol)
@@ -85,30 +90,35 @@ for j in range(0, len(fileFirstPass) - 1):
 
 #Making Plots
 
+semimajoraxes = np.array(semimajoraxes)
+eccentricities = np.array(eccentricities)
+inclinations = np.array(inclinations)
+
+print(semimajoraxes)
 fig0 = plt.figure(figsize=(7, 7))
-counts, bins = np.histogram(semimajoraxes / AU, bins = 250)
-counts0, bins0 = np.histogram(semimajoraxes0 / AU, bins = 250)
+counts, bins = np.histogram(semimajoraxes / AU, bins = 80)
+counts0, bins0 = np.histogram(semimajoraxes0 / AU, bins = 100)
 plt.stairs(counts, bins)
-print(bins)
 plt.stairs(counts0, bins0)
 plt.plot([2.502, 2.502], [0, np.max(counts)], color = "red")
 plt.plot([2.825, 2.825], [0, np.max(counts)], color = "red")
 plt.plot([2.958, 2.958], [0, np.max(counts)], color = "red")
+plt.scatter([227.956E9 / AU], [1], color = "red")
 plt.xlabel("Semimajor Axis [AU]")
 plt.ylabel("Asteroid Density")
 #plt.xlim(0, 5)
-plt.show()
+#plt.show()
 
 fig1 = plt.figure(figsize=(7, 7))
-plt.scatter(semimajoraxes0 / AU, eccentricities0, color = "blue", label = "Initial")
+#plt.scatter(semimajoraxes0 / AU, eccentricities0, color = "blue", label = "Initial")
 plt.scatter(semimajoraxes / AU, eccentricities, color = "red", label = "Final")
 plt.plot([2.502, 2.502], [0, 0.3], color = "red")
-#plt.plot([2.825, 2.825], [0, 0.3], color = "red")
-#plt.plot([2.958, 2.958], [0, 0.3], color = "red")
+plt.plot([2.825, 2.825], [0, 0.3], color = "red")
+plt.plot([2.958, 2.958], [0, 0.3], color = "red")
 plt.xlabel("Semimajor Axis [AU]")
 plt.ylabel("Eccentricities")
-plt.xlim(2, 3)
-plt.ylim(0, 0.5)
+#plt.xlim(2, 3)
+#plt.ylim(0, 0.5)
 plt.legend()
 
 fig2 = plt.figure()
@@ -117,14 +127,24 @@ ax.scatter(xs, ys, zs)
 ax.scatter([0], [0], [0], color = "yellow")
 ax.scatter([227.956E9 / AU], [0], [0], color = "red")
 ax.scatter([778.57E9 / AU], [0], [0], color = "orange")
+ax.axes.set_xlim(-4, 4)
+ax.axes.set_ylim(-4, 4)
+ax.axes.set_zlim(-4, 4)
 #ax.set_title("Actual Positions")
 
 fig3 = plt.figure(figsize=(7, 7))
-plt.scatter(semimajoraxes0 / AU, inclinations0, color = "blue", label = "Initial")
-plt.scatter(semimajoraxes / AU, inclinations, color = "red", label = "Final")
+plt.scatter(semimajoraxes0 / AU, inclinations0 * (360 / (np.pi * 2)), color = "blue", label = "Initial")
+plt.scatter(semimajoraxes / AU, inclinations * (360 / (np.pi * 2)), color = "red", label = "Final")
 plt.xlabel("Semimajor Axis [AU]")
-plt.ylabel("Inclinations [rad]")
+plt.ylabel("Inclinations [deg]")
 plt.xlim(2.1, 2.9)
+
+fig6 = plt.figure()
+ax = plt.axes(projection='3d')
+ax.scatter(semimajoraxes, eccentricities, inclinations)
+ax.set_xlabel("Semimajor Axis [AU]")
+ax.set_ylabel("Eccentricities")
+ax.set_zlabel("Inclinations [deg]")
 
 #fig4 = plt.figure(figsize=(7, 7))
 #plt.scatter(semimajoraxes0 / AU, diffa / AU)
@@ -137,5 +157,7 @@ plt.xlim(2.1, 2.9)
 #plt.plot([2.502, 2.502], [0, 3.5E-13], color = "red")
 #plt.xlabel("Semimajor Axis [AU]", fontsize = 15)
 #plt.ylabel("Change in Eccentricity", fontsize = 15)
+
+
 
 plt.show()

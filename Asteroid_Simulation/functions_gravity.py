@@ -11,6 +11,7 @@ from imports import np
 #Constants NEED TO STATE UNITS
 
 G = 6.6726E-11 #Gravitational Constant [m3kg-1s-2], https://www.britannica.com/science/gravitational-constant FOR NOW
+typical_Y = 1E-19
 
 
 #Function for distance between bodies
@@ -70,6 +71,25 @@ def a_Gravity_V(masses, xs, ys, zs, xs2, ys2, zs2): #Same as above but vectorise
     #print(az)
     return ax, ay, az
 
+def a_Gravity_V_Yarkovsky(masses, xs, ys, zs, xs2, ys2, zs2, spin): #Same as above but vectorised. arrays for all the arguments
+    ax = 0
+    ay = 0
+    az = 0
+    for i in range(0, len(masses)): #Only 3 loops for main simulations so computationally justifiable
+        axNew, ayNew, azNew = a_Gravity_Component_V(masses[i], xs, ys, zs, xs2[i], ys2[i], zs2[i])
+        ax += axNew
+        ay += ayNew
+        az += azNew
+    
+    for j in range(0, len(xs)):
+        r = np.array([xs[j], ys[j], zs[j]]) / np.sqrt(xs[j] ** 2 + ys[j] ** 2 + zs[j] ** 2)
+        a_Y = typical_Y * r * np.cos(np.abs(spin[j])) + np.cross(spin[j] / np.abs(spin[j]) , r) * np.sin(np.abs(spin[j])) + spin[j] / np.abs(spin[j]) * np.dot(spin[j] / np.abs(spin[j]), r) * (1 - np.cos(np.abs(spin[j])))#Rodruigues Formula
+        ax += a_y[0]
+        ay += a_y[1]
+        az += a_y[2]
+
+    return ax, ay, az
+
 
 #Function for gravitational velocity impact (none)
 
@@ -81,6 +101,10 @@ def v_Gravity(masses, states, stateParticular): #"Dummy" function for step & evo
 
 def rv_from_ae(a, e, m): #Gives initial state vector at periapse given semi-major axis, eccentricity and mass sum (same approx. as below)
     return np.array([[a * (1-e), 0, 0], [0, np.sqrt(G * m * (1 + e) / (a * (1-e))), 0]])
+
+def rv_from_aei(a, e, i, m): #as above, i is in radians
+    return np.array([[a * (1-e), 0, 0], [0, np.sqrt(G * m * (1 + e) / (a * (1-e))) * np.cos(i), np.sqrt(G * m * (1 + e) / (a * (1-e))) * np.sin(i)]])
+
 
 def ae_from_rv(state, m): #m should be total mass of two bodies, but assume that mass of sun >> asteroid mass so should just be sun's mass (for calculating mu)
     vSqr = np.sum(state[1] ** 2)

@@ -6,10 +6,10 @@
 #Imports
 
 from imports import np, plt, time, csv, os, pd, mp
-from functions_solarSystem import Sol_M_J_a_Gravity_V, m_Sol, T_J
-from functions_mainBelt import asteroidPopulation_aei_V
+from functions_solarSystem import Sol_M_J_a_Gravity_V_Yarkovsky, m_Sol, T_J
+from functions_mainBelt import asteroidPopulation_line_elliptical_V
 from functions_evolve import evolve_V, evolve_V_P
-#from functions_gravity import ae_from_rv
+from functions_gravity import ae_from_rv
 
 
 #Constants
@@ -19,13 +19,10 @@ timestep = T_J / 1000
 print("Timestep = {}s".format(timestep))
 T = T_J * 1000
 asteroidNum = 1000
-eMax = 0.4 #Max orbital eccentricity
-iMax = 18 #Max inclination in degrees
-aStart = 2 #Inner-most semimajor axis of starting asteroid population
-aEnd = 3 #Outer-most equivalent
+eMax = 0.4
 
 newSim = False
-startingDirectory = "Sim_V_i_Wide"
+startingDirectory = "SimVectorisedWide"
 
 
 #ACTUAL CODE
@@ -64,7 +61,7 @@ while True:
 
         #Create initial conditions
         N_start = np.array([0, 0])
-        xs, ys, zs, vxs, vys, vzs = asteroidPopulation_aei_V(asteroidNum, eMax, iMax, aStart, aEnd)
+        xs, ys, zs, vxs, vys, vzs = asteroidPopulation_line_elliptical_V(asteroidNum, eMax)
 
         #Write initial conditions
         startFile = open('Simulations\\{}\\start.csv'.format(startingDirectory), 'w+', newline='')
@@ -80,8 +77,8 @@ while True:
         #Write parameters file
         paramsFile = open('Simulations\\{}\\params.csv'.format(startingDirectory), 'w+', newline='') #Creates csv file called the current time which is used to store (paused) results
         paramsWriter = csv.writer(paramsFile)
-        paramsWriter.writerow(["timestep", "T", "asteroidNum", "eMax", "iMax", "aStart", "aEnd"])
-        paramsWriter.writerow([timestep, T, asteroidNum, eMax, iMax, aStart, aEnd])
+        paramsWriter.writerow(["timestep", "T", "asteroidNum", "eMax"])
+        paramsWriter.writerow([timestep, T, asteroidNum, eMax])
         paramsFile.close()
 
         
@@ -89,7 +86,7 @@ while True:
 
     print("START: {}".format(time.asctime(time.localtime())))
 
-    xs, ys, zs, vxs, vys, vzs = evolve_V(xs, ys, zs, vxs, vys, vzs, N_start, timestep, T, Sol_M_J_a_Gravity_V)
+    xs, ys, zs, vxs, vys, vzs = evolve_V(xs, ys, zs, vxs, vys, vzs, N_start, timestep, T, Sol_M_J_a_Gravity_V_Yarkovsky)
 
     print("END: {}".format(time.asctime(time.localtime())))
 

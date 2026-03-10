@@ -42,16 +42,16 @@ T_M = 2 * np.pi * ((a_M ** 3) / (G * m_Sol)) ** (0.5) #Using K3L
 T_J = 2 * np.pi * ((a_J ** 3) / (G * m_Sol)) ** (0.5)
 
 #Asteroid Belt Parameters
-startR = 2.4 * AU #Start orbital radius of asteroids
-endR = 2.6 * AU #End orbital radius of asteroids
-eMax = 0.3 #Maximum eccentricity of asteroids
-asteroidNum = 20 #Number of asteroids (obvs.)
+startR = 2.1 * AU #Start orbital radius of asteroids
+endR = 2.9 * AU #End orbital radius of asteroids
+eMax = 0.4 #Maximum eccentricity of asteroids
+asteroidNum = 1000 #Number of asteroids (obvs.)
 
 #Simulation Parameters
 timestepNum = 0 #Save timestepNum s for each planet. Need to keep running count of how many revolutions Jupiter has done so that can tell how long the simulation is running for in in-simulation time
 timestep = T_J / 1000 #Duration of each timestep
-T = T_J * 20 #In-universe simulation duration
-startingDirectory = "SimTestingGravityVectorised" #File dedicated to simulation
+T = T_J * 1000 #In-universe simulation duration
+startingDirectory = "SimVectorisedWideMulti" #File dedicated to simulation
 newSim = True #True if this is the first time simulation with these parameters is being run
 
 
@@ -188,9 +188,7 @@ def evolve_V_P(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a):
     print("Evolving Asteroids with N = {}".format(N_end))
     for j in range(0, N_end):
         xs, ys, zs, vxs, vys, vzs = step_RK4_V(xs, ys, zs, vxs, vys, vzs, N_start + j, dt, f_a)
-    print("finished evolving calcs")
-    #q.put(np.array([xs, ys, zs, vxs, vys, vzs])) #q is a queue object in mp module
-    print("evolve fully finished")
+    return xs, ys, zs, vxs, vys, vzs
 
 def evolve_V(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a): #Vectorised version of evolve for RK4_V, self contained
     N_end = int(np.round(T / dt)) + 1 #Number of timesteps needed
@@ -199,15 +197,15 @@ def evolve_V(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a): #Vectorised versio
         xs, ys, zs, vxs, vys, vzs = step_RK4_V(xs, ys, zs, vxs, vys, vzs, N_start + j, dt, f_a)
     return xs, ys, zs, vxs, vys, vzs
 
-def worker(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a, queue): #Worker for multiprocessing
-    result = evolve_V_P(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a)
-    queue.put(result)
+def worker(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a, q): #Worker for multiprocessing
+    xs, ys, zs, vxs, vys, vzs = evolve_V_P(xs, ys, zs, vxs, vys, vzs, N_start, dt, T, f_a)
+    q.put(np.array([xs, ys, zs, vxs, vys, vzs]))
 
 #---------------------------------------
 #               SIMULATION
 #---------------------------------------
 
-while True:
+while __name__ == "__main__":
 
     #Deciding whether to start new simulation of not
     if newSim == False:
@@ -254,14 +252,27 @@ while True:
     if __name__ == "__main__": #Ensures multiprocessing begins from main program and is worthwhile
         print("STARTING PROCESSES")
         q = mp.Queue()
-        p1 = mp.Process(target=worker, args=(xs[:10], ys[:10], zs[:10], vxs[:10], vys[:10], vzs[:10], N_start, timestep, T, Sol_M_J_a_Gravity_V,q))
-        p2 = mp.Process(target=worker, args=(xs[10:], ys[10:], zs[10:], vxs[10:], vys[10:], vzs[10:], N_start, timestep, T, Sol_M_J_a_Gravity_V,q))
+        print("creating objects")
+        p1 = mp.Process(target=worker, args=(xs[:500], ys[:500], zs[:500], vxs[:500], vys[:500], vzs[:500], N_start, timestep, T, Sol_M_J_a_Gravity_V, q))
+        p2 = mp.Process(target=worker, args=(xs[500:], ys[500:], zs[500:], vxs[500:], vys[500:], vzs[500:], N_start, timestep, T, Sol_M_J_a_Gravity_V, q))
+        print("created objects")
         p1.start()
+        p2.start()
+        print("started objects")
         p1.join()
+        p2.join()
+        print("finished objects")
         result1 = q.get()
+        result2 = q.get()
+        xs = np.append(result1[0], result2[0])
+        ys = np.append(result1[1], result2[1])
+        zs = np.append(result1[2], result2[2])
+        vxs = np.append(result1[3], result2[3])
+        vys = np.append(result1[4], result2[4])
+        vzs = np.append(result1[5], result2[5])
     else:
         print("Error with Parallelisation")
-    xs, ys, zs, vxs, vys, vzs = evolve_V(xs, ys, zs, vxs, vys, vzs, N_start, timestep, T, Sol_M_J_a_Gravity_V)
+    #xs, ys, zs, vxs, vys, vzs = evolve_V(xs, ys, zs, vxs, vys, vzs, N_start, timestep, T, Sol_M_J_a_Gravity_V)
 
     print("END: {}".format(time.asctime(time.localtime())))
 

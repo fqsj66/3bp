@@ -7,9 +7,9 @@
 
 from imports import np, plt, time, csv, os, pd, mp
 from functions_solarSystem import Sol_M_J_a_Gravity_V, m_Sol, T_J
-from functions_mainBelt import asteroidPopulation_aei_V
+from functions_mainBelt import asteroidPopulation_resonance
 from functions_evolve import evolve_V, evolve_V_P
-#from functions_gravity import ae_from_rv
+from functions_gravity import ae_from_rv
 
 
 #Constants
@@ -17,15 +17,11 @@ from functions_evolve import evolve_V, evolve_V_P
 timestepNum = 0 #Save timestepNum s for each planet. Need to keep running count of how many revolutions Jupiter has done so that can tell how long the simulation is running for in in-simulation time
 timestep = T_J / 1000
 print("Timestep = {}s".format(timestep))
-T = T_J * 1000
-asteroidNum = 1000
-eMax = 0.4 #Max orbital eccentricity
-iMax = 18 #Max inclination in degrees
-aStart = 2 #Inner-most semimajor axis of starting asteroid population
-aEnd = 3 #Outer-most equivalent
+T = T_J * 10
+asteroidNum = 3 #HAS TO BE 3 TO WORK WITH THE FUNCTIONS OF THE MAIN BELT
 
-newSim = False
-startingDirectory = "Sim_V_i_Wide"
+newSim = True
+startingDirectory = "SimVectorisedResonanceLonger"
 
 
 #ACTUAL CODE
@@ -64,7 +60,7 @@ while True:
 
         #Create initial conditions
         N_start = np.array([0, 0])
-        xs, ys, zs, vxs, vys, vzs = asteroidPopulation_aei_V(asteroidNum, eMax, iMax, aStart, aEnd)
+        xs, ys, zs, vxs, vys, vzs = asteroidPopulation_resonance(asteroidNum)
 
         #Write initial conditions
         startFile = open('Simulations\\{}\\start.csv'.format(startingDirectory), 'w+', newline='')
@@ -78,11 +74,11 @@ while True:
         startFile.close()
 
         #Write parameters file
-        paramsFile = open('Simulations\\{}\\params.csv'.format(startingDirectory), 'w+', newline='') #Creates csv file called the current time which is used to store (paused) results
-        paramsWriter = csv.writer(paramsFile)
-        paramsWriter.writerow(["timestep", "T", "asteroidNum", "eMax", "iMax", "aStart", "aEnd"])
-        paramsWriter.writerow([timestep, T, asteroidNum, eMax, iMax, aStart, aEnd])
-        paramsFile.close()
+        #paramsFile = open('Simulations\\{}\\params.csv'.format(startingDirectory), 'w+', newline='') #Creates csv file called the current time which is used to store (paused) results
+        #paramsWriter = csv.writer(paramsFile)
+        #paramsWriter.writerow(["timestep", "T", "asteroidNum"])
+        #paramsWriter.writerow([timestep, T, asteroidNum])
+        #paramsFile.close()
 
         
 
@@ -96,6 +92,13 @@ while True:
 
     #Saving file at the end of the sim
 
+    print(xs)
+    print(ys)
+    print(zs)
+    print(vxs)
+    print(vys)
+    print(vzs)
+
     print("SAVING...")
 
     resultsFile = open('Simulations\\{}\\{}.csv'.format(startingDirectory, time.time()), 'w+', newline='') #Creates csv file called the current time which is used to store (paused) results
@@ -105,12 +108,14 @@ while True:
     resultsWriter.writerow([N_start[0] + int(np.round(T / timestep)) + 1, N_start[1] + int(np.round(T / timestep)) + 1, 0, 0, 0, 0])
 
     for i in range(0, len(xs)): #Not efficient but only happens once at the end of each run
-        if np.abs(xs[i]) < 1E12 and np.abs(ys[i]) < 1E12: #Doesn't save particles that are outside solar system (> 10 AU)
-            resultsWriter.writerow([xs[i], ys[i], zs[i], vxs[i], vys[i], vzs[i]])
+        #if np.abs(xs[i]) < 1E12 and np.abs(ys[i]) < 1E12: #Doesn't save particles that are outside solar system (> 10 AU)
+        resultsWriter.writerow([xs[i], ys[i], zs[i], vxs[i], vys[i], vzs[i]])
+        #else: #Need to do something like this if tracking individual asteroids which may leave the solar system
+        #    resultsWriter.writerow([xs[i], ys[i], zs[i], 0, 0, 0])
 
     resultsFile.close()
 
-    time.sleep(10)
+    #time.sleep(10)
 
     if newSim == True:
         newSim = False

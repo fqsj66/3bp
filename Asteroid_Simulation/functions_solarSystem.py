@@ -11,7 +11,7 @@
 
 # Imports
 from imports import np
-from functions_gravity import a_Gravity, a_Gravity_V
+from functions_gravity import a_Gravity, a_Gravity_V, a_Gravity_V_Yarkovsky
 
 
 # Constants
@@ -83,6 +83,16 @@ def Sol_M_J_a_Gravity_V(xs, ys, zs, N, dt): #Same as above but vectorised compat
     zs2 = np.array([0, 0, 0])
     return a_Gravity_V(masses, xs, ys, zs, xs2, ys2, zs2)
 
+def Sol_M_J_a_Gravity_V_Yarkovsky(xs, ys, zs, spin, N, dt):
+    #N is an array where the first element is the timestep number for Mars and the second is for Jupiter
+    masses = np.array([m_Sol, m_M, m_J])
+    M_coords = x_M_Circular(N[0], dt)
+    J_coords = x_J_Circular(N[0], dt)
+    xs2 = np.array([0, M_coords[0], J_coords[0]])
+    ys2 = np.array([0, M_coords[1], J_coords[1]])
+    zs2 = np.array([0, 0, 0])
+    return a_Gravity_V_Yarkovsky(masses, xs, ys, zs, xs2, ys2, zs2, spin)
+
 def Sol_J_a_Gravity(stateParticular, N, dt): #Acceleration due to gravity of asteroid at stateParticular due to Sun and Jupiter system
     masses = np.array([m_Sol, m_J])
     states = np.array([[[0, 0, 0], [0, 0, 0]], [tuple(x_J_Circular(N, dt)), [0, 0, 0]]]) #Set velocities to zero because these are redundant in the calculation, force of gravity independent of velocities
@@ -92,3 +102,10 @@ def Sol_a_Gravity(stateParticular, N, dt): #Acceleration due to gravity of aster
     masses = np.array([m_Sol])
     states = np.array([[[0, 0, 0], [0, 0, 0]]]) #Set velocities to zero because these are redundant in the calculation, force of gravity independent of velocities
     return a_Gravity(masses, states, stateParticular)
+
+def Sol_a_Gravity_V(xs, ys, zs, N, dt): #Used for the timestep error sims
+    masses = np.array([m_Sol])
+    xs2 = np.array([0])
+    ys2 = np.array([0])
+    zs2 = np.array([0])
+    return a_Gravity_V(masses, xs, ys, zs, xs2, ys2, zs2)

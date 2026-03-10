@@ -15,17 +15,17 @@ from functions_evolve import evolve_V, evolve_V_P
 #Constants
 
 timestepNum = 0 #Save timestepNum s for each planet. Need to keep running count of how many revolutions Jupiter has done so that can tell how long the simulation is running for in in-simulation time
-timestep = T_J / 1000
+timestep = T_J / 10
 print("Timestep = {}s".format(timestep))
 T = T_J * 1000
-asteroidNum = 1000
+asteroidNum = 5
 eMax = 0.4 #Max orbital eccentricity
 iMax = 18 #Max inclination in degrees
 aStart = 2 #Inner-most semimajor axis of starting asteroid population
-aEnd = 3 #Outer-most equivalent
+aEnd = 3.3 #Outer-most equivalent
 
 newSim = False
-startingDirectory = "Sim_V_i_Wide"
+startingDirectory = "Sim_timestep_10"
 
 
 #ACTUAL CODE
@@ -91,12 +91,12 @@ while True:
 
     xs, ys, zs, vxs, vys, vzs = evolve_V(xs, ys, zs, vxs, vys, vzs, N_start, timestep, T, Sol_M_J_a_Gravity_V)
 
-    print("END: {}".format(time.asctime(time.localtime())))
+    #print("END: {}".format(time.asctime(time.localtime())))
 
 
     #Saving file at the end of the sim
 
-    print("SAVING...")
+    #print("SAVING...")
 
     resultsFile = open('Simulations\\{}\\{}.csv'.format(startingDirectory, time.time()), 'w+', newline='') #Creates csv file called the current time which is used to store (paused) results
     resultsWriter = csv.writer(resultsFile)
@@ -110,7 +110,7 @@ while True:
 
     resultsFile.close()
 
-    time.sleep(10)
+    #time.sleep(10)
 
     if newSim == True:
         newSim = False
