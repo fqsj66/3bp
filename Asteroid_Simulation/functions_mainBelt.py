@@ -134,7 +134,7 @@ def asteroidPopulation_aei_V(Num, eMax, iMax, aStart, aEnd): #Same prosess as ab
 
     population = np.zeros((Num, 2, 3))
     eccentricity = np.zeros(Num)
-    semimajoraxis = np.zeros(Num)
+    #semimajoraxis = np.zeros(Num)
     inclination = np.zeros(Num)
     xs = np.zeros(Num)
     ys = np.zeros(Num)
@@ -143,11 +143,22 @@ def asteroidPopulation_aei_V(Num, eMax, iMax, aStart, aEnd): #Same prosess as ab
     vys = np.zeros(Num)
     vzs = np.zeros(Num)
 
+    #Edit for wider range
+    aCurrent = 3 * AU
+    i = 0
+    semimajoraxis2 = []
+    while aCurrent <= (3.3 * AU):
+        semimajoraxis2.append(aCurrent)
+        i += 1
+        aCurrent += 0.001 * AU
+    semimajoraxis = np.array(semimajoraxis2[:-1])
+    print(semimajoraxis / AU)
+
     for i in range(0, Num): #This is not efficient but only runs once at the very start of each simulatiom
         eccentricity[i] = rnd.uniform(0, eMax)
         inclination[i] = rnd.uniform(0, iMax)
-        semimajoraxis[i] = ((aEnd - aStart) * i / Num) + aStart
-        population[i] = rv_from_aei(((aEnd - aStart) * i / Num) + aStart, eccentricity[i], inclination[i], m_Sol)
+        #semimajoraxis[i] = ((aEnd - aStart) * i / Num) + aStart
+        population[i] = rv_from_aei(semimajoraxis[i], eccentricity[i], inclination[i], m_Sol)
         
         xs[i] = population[i][0][0]
         ys[i] = population[i][0][1]

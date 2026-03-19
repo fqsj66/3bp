@@ -18,14 +18,14 @@ timestepNum = 0 #Save timestepNum s for each planet. Need to keep running count 
 timestep = T_J / 1000
 print("Timestep = {}s".format(timestep))
 T = T_J * 1000
-asteroidNum = 1000
+asteroidNum = 300
 eMax = 0.4 #Max orbital eccentricity
 iMax = 18 #Max inclination in degrees
-aStart = 2 #Inner-most semimajor axis of starting asteroid population
-aEnd = 3 #Outer-most equivalent
+aStart = 3 #Inner-most semimajor axis of starting asteroid population
+aEnd = 3.3 #Outer-most equivalent
 
 newSim = False
-startingDirectory = "Sim_V_i_Wide"
+startingDirectory = "Sim_V_i_Wide_2"
 
 
 #ACTUAL CODE

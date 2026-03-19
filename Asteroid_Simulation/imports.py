@@ -11,3 +11,4 @@ import os
 import time
 import random as rnd
 import multiprocessing as mp
+import scipy
